@@ -1,0 +1,8 @@
+{
+    "1_total_c_programs_analyzed": 164,
+    "2_all_three_agreement_count": 1,
+    "3_static_only_count": 1,
+    "4_dynamic_only_count": 1,
+    "5_static_false_positives": 1,
+    "note": "Metrics successfully computed from local database."
+}

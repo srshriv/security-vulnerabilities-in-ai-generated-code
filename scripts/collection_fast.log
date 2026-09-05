@@ -1,0 +1,1308 @@
+﻿============================================================
+============================================================
+[C] 1880/2500
+[C] 1890/2500
+[C] 1900/2500
+[C] 1910/2500
+[C] 1920/2500
+[C] 1930/2500
+[C] 1940/2500
+[C] 1950/2500
+[C] 1960/2500
+[C] 1970/2500
+[C] 1980/2500
+[C] 1990/2500
+[C] 2000/2500
+[C] 2010/2500
+[C] 2020/2500
+[C] 2030/2500
+[C] 2040/2500
+[C] 2050/2500
+[C] 2060/2500
+[C] 2070/2500
+[C] 2080/2500
+[C] 2090/2500
+[C] 2100/2500
+[C] 2110/2500
+[C] 2120/2500
+[C] 2130/2500
+[C] 2140/2500
+[C] 2150/2500
+[C] 2160/2500
+[C] 2170/2500
+[C] 2180/2500
+[C] 2190/2500
+[C] 2200/2500
+[C] 2210/2500
+[C] 2220/2500
+[C] 2230/2500
+[C] 2240/2500
+[C] 2250/2500
+[C] 2260/2500
+[C] 2270/2500
+[C] 2280/2500
+[C] 2290/2500
+[C] 2300/2500
+[C] 2310/2500
+[C] 2320/2500
+[C] 2330/2500
+[C] 2340/2500
+[C] 2350/2500
+[C] 2360/2500
+[C] 2370/2500
+[C] 2380/2500
+[C] 2390/2500
+[C] 2400/2500
+[C] 2410/2500
+[C] 2420/2500
+[C] 2430/2500
+[C] 2440/2500
+[C] 2450/2500
+[C] 2460/2500
+[C] 2470/2500
+[C] 2480/2500
+[C] 2490/2500
+[C] 2500/2500
+[Python] 1550/2500
+[Python] 1560/2500
+[Python] 1570/2500
+[Python] 1580/2500
+[Python] 1590/2500
+[Python] 1600/2500
+[Python] 1610/2500
+[Python] 1620/2500
+[Python] 1630/2500
+[Python] 1640/2500
+[Python] 1650/2500
+[Python] 1660/2500
+[Python] 1670/2500
+[Python] 1680/2500
+[Python] 1690/2500
+[Python] 1700/2500
+[Python] 1710/2500
+[Python] 1720/2500
+[Python] 1730/2500
+[Python] 1740/2500
+[Python] 1750/2500
+[Python] 1760/2500
+[Python] 1770/2500
+[Python] 1780/2500
+[Python] 1790/2500
+[Python] 1800/2500
+[Python] 1810/2500
+[Python] 1820/2500
+[Python] 1830/2500
+[Python] 1840/2500
+[Python] 1850/2500
+[Python] 1860/2500
+[Python] 1870/2500
+[Python] 1880/2500
+[Python] 1890/2500
+[Python] 1900/2500
+[Python] 1910/2500
+[Python] 1920/2500
+[Python] 1930/2500
+[Python] 1940/2500
+[Python] 1950/2500
+[Python] 1960/2500
+[Python] 1970/2500
+[Python] 1980/2500
+[Python] 1990/2500
+[Python] 2000/2500
+[Python] 2010/2500
+[Python] 2020/2500
+[Python] 2030/2500
+[Python] 2040/2500
+[Python] 2050/2500
+[Python] 2060/2500
+[Python] 2070/2500
+[Python] 2080/2500
+[Python] 2090/2500
+[Python] 2100/2500
+[Python] 2110/2500
+[Python] 2120/2500
+[Python] 2130/2500
+[Python] 2140/2500
+[Python] 2150/2500
+[Python] 2160/2500
+[Python] 2170/2500
+[Python] 2180/2500
+[Python] 2190/2500
+[Python] 2200/2500
+[Python] 2210/2500
+[Python] 2220/2500
+[Python] 2230/2500
+[Python] 2240/2500
+[Python] 2250/2500
+[Python] 2260/2500
+[Python] 2270/2500
+[Python] 2280/2500
+[Python] 2290/2500
+[Python] 2300/2500
+[Python] 2310/2500
+[Python] 2320/2500
+[Python] 2330/2500
+[Python] 2340/2500
+[Python] 2350/2500
+[Python] 2360/2500
+[Python] 2370/2500
+[Python] 2380/2500
+[Python] 2390/2500
+[Python] 2400/2500
+[Python] 2410/2500
+[Python] 2420/2500
+[Python] 2430/2500
+[Python] 2440/2500
+[Python] 2450/2500
+[Python] 2460/2500
+[Python] 2470/2500
+[Python] 2480/2500
+[Python] 2490/2500
+[Python] 2500/2500
+[JavaScript] 600/4600
+
+============================================================
+[20:30:26] collector started pid=29900
+PAT length=40
+Current counts: {'C': 2568, 'JavaScript': 606, 'Python': 2543}
+Targets:        {'C': 2500, 'Python': 4600, 'JavaScript': 4600}
+============================================================
+[C] at target (2568/2500), skipping
+[Python] need 2057 more
+[Python/copilot] p1 searching...
+[Python/copilot] p1 got 100 (total=269824)
+
+============================================================
+[20:33:09] collector started pid=18884
+PAT length=40
+Current counts: {'C': 2568, 'JavaScript': 606, 'Python': 2543}
+Targets:        {'C': 2500, 'Python': 4600, 'JavaScript': 4600}
+============================================================
+[C] at target (2568/2500), skipping
+[Python] need 2057 more
+[Python/copilot] p1 searching...
+[Python/copilot] p1 got 100 (total=269824)
+
+============================================================
+[20:34:44] collector started pid=38460
+PAT length=40
+Current counts: {'C': 2568, 'JavaScript': 606, 'Python': 2543}
+Targets:        {'C': 2500, 'Python': 4600, 'JavaScript': 4600}
+============================================================
+[C] at target (2568/2500), skipping
+[Python] need 2057 more
+[Python/copilot] p1 searching...
+[Python/copilot] p1 got 100 (total=269824)
+
+============================================================
+[20:35:16] collector started pid=3212
+PAT length=40
+Current counts: {'C': 2568, 'JavaScript': 606, 'Python': 2543}
+Targets:        {'C': 2500, 'Python': 4600, 'JavaScript': 4600}
+============================================================
+[C] at target (2568/2500), skipping
+[Python] need 2057 more
+[Python/copilot] p1 searching...
+[Python/copilot] p1 got 100 (total=269824)
+
+============================================================
+[20:36:41] fast-collector started pid=39660
+PAT length=40
+Current counts: {'C': 2568, 'JavaScript': 606, 'Python': 2543}
+Targets:        {'C': 2500, 'Python': 4600, 'JavaScript': 4600}
+============================================================
+[C] at target (2568/2500), skipping
+[Python] need 2057 more
+[Python/copilot] p1 searching...
+[Python/copilot] p1 got 100 (total=269824)
+[Python/copilot] p1 stored 0/100 | total 2543/4600
+[Python/copilot] p2 searching...
+[Python/copilot] p2 got 100 (total=269824)
+[Python/copilot] p2 stored 0/100 | total 2543/4600
+[Python/copilot] p3 searching...
+[Python/copilot] p3 got 100 (total=269824)
+[Python/copilot] p3 stored 0/100 | total 2543/4600
+[Python/copilot] p4 searching...
+[Python/copilot] p4 got 100 (total=269824)
+[Python/copilot] p4 stored 0/100 | total 2543/4600
+[Python/copilot] p5 searching...
+[Python/copilot] p5 got 100 (total=269824)
+[Python/copilot] p5 stored 0/100 | total 2543/4600
+[Python/copilot] p6 searching...
+[Python/copilot] p6 got 100 (total=269824)
+[Python/copilot] p6 stored 0/100 | total 2543/4600
+[Python/copilot] p7 searching...
+[Python/copilot] p7 got 100 (total=269824)
+[Python/copilot] p7 stored 0/100 | total 2543/4600
+[Python/copilot] p8 searching...
+[Python/copilot] p8 got 100 (total=269824)
+[Python/copilot] p8 stored 0/100 | total 2543/4600
+[Python/copilot] p9 searching...
+[Python/copilot] p9 got 100 (total=269824)
+[Python/copilot] p9 stored 0/100 | total 2543/4600
+[Python/copilot] p10 searching...
+[Python/copilot] p10 got 100 (total=269824)
+[Python/copilot] p10 stored 0/100 | total 2543/4600
+[Python/chatgpt] p1 searching...
+[Python/chatgpt] p1 got 100 (total=340992)
+[Python/chatgpt] p1 stored 0/100 | total 2543/4600
+[Python/chatgpt] p2 searching...
+[Python/chatgpt] p2 got 100 (total=340992)
+[Python/chatgpt] p2 stored 0/100 | total 2543/4600
+[Python/chatgpt] p3 searching...
+[Python/chatgpt] p3 got 100 (total=340992)
+[Python/chatgpt] p3 stored 0/100 | total 2543/4600
+[Python/chatgpt] p4 searching...
+[Python/chatgpt] p4 got 100 (total=340992)
+[Python/chatgpt] p4 stored 0/100 | total 2543/4600
+[Python/chatgpt] p5 searching...
+[Python/chatgpt] p5 got 100 (total=340992)
+[Python/chatgpt] p5 stored 0/100 | total 2543/4600
+[Python/chatgpt] p6 searching...
+[Python/chatgpt] p6 got 100 (total=340992)
+[Python/chatgpt] p6 stored 0/100 | total 2543/4600
+[Python/chatgpt] p7 searching...
+[Python/chatgpt] p7 got 100 (total=340992)
+[Python/chatgpt] p7 stored 0/100 | total 2543/4600
+[Python/chatgpt] p8 searching...
+[Python/chatgpt] p8 got 100 (total=340992)
+[Python/chatgpt] p8 stored 0/100 | total 2543/4600
+[Python/chatgpt] p9 searching...
+[Python/chatgpt] p9 got 100 (total=340992)
+[Python/chatgpt] p9 stored 0/100 | total 2543/4600
+[Python/chatgpt] p10 searching...
+[Python/chatgpt] p10 got 100 (total=340992)
+[Python/chatgpt] p10 stored 0/100 | total 2543/4600
+[Python/gpt4] p1 searching...
+[Python/gpt4] p1 got 100 (total=130304)
+[Python/gpt4] p1 stored 0/100 | total 2543/4600
+[Python/gpt4] p2 searching...
+[Python/gpt4] p2 got 100 (total=130304)
+[Python/gpt4] p2 stored 1/100 | total 2544/4600
+[Python/gpt4] p3 searching...
+[Python/gpt4] p3 got 100 (total=130304)
+[Python/gpt4] p3 stored 0/100 | total 2544/4600
+[Python/gpt4] p4 searching...
+[Python/gpt4] p4 got 100 (total=130304)
+[Python/gpt4] p4 stored 0/100 | total 2544/4600
+[Python/gpt4] p5 searching...
+[Python/gpt4] p5 got 100 (total=130304)
+[Python/gpt4] p5 stored 0/100 | total 2544/4600
+[Python/gpt4] p6 searching...
+[Python/gpt4] p6 got 100 (total=130304)
+[Python/gpt4] p6 stored 0/100 | total 2544/4600
+[Python/gpt4] p7 searching...
+[Python/gpt4] p7 got 100 (total=130304)
+[Python/gpt4] p7 stored 0/100 | total 2544/4600
+[Python/gpt4] p8 searching...
+[Python/gpt4] p8 got 100 (total=130304)
+[Python/gpt4] p8 stored 0/100 | total 2544/4600
+[Python/gpt4] p9 searching...
+[Python/gpt4] p9 got 100 (total=130304)
+[Python/gpt4] p9 stored 0/100 | total 2544/4600
+[Python/gpt4] p10 searching...
+[Python/gpt4] p10 got 100 (total=130304)
+[Python/gpt4] p10 stored 0/100 | total 2544/4600
+[Python/gpt-4] p1 searching...
+[Python/gpt-4] p1 got 100 (total=1259520)
+[Python/gpt-4] p1 stored 2/100 | total 2546/4600
+[Python/gpt-4] p2 searching...
+[Python/gpt-4] p2 got 100 (total=1259520)
+[Python/gpt-4] p2 stored 0/100 | total 2546/4600
+[Python/gpt-4] p3 searching...
+[Python/gpt-4] p3 got 100 (total=1259520)
+[Python] 2550/4600
+[Python] 2560/4600
+[Python] 2570/4600
+[Python] 2580/4600
+[Python/gpt-4] p3 stored 35/100 | total 2581/4600
+[Python/gpt-4] p4 searching...
+[Python/gpt-4] p4 got 100 (total=1259520)
+[Python] 2590/4600
+[Python] 2600/4600
+[Python] 2610/4600
+[Python] 2620/4600
+[Python] 2630/4600
+[Python/gpt-4] p4 stored 56/100 | total 2637/4600
+[Python/gpt-4] p5 searching...
+[Python/gpt-4] p5 got 100 (total=1259520)
+[Python] 2640/4600
+[Python] 2650/4600
+[Python] 2660/4600
+[Python] 2670/4600
+[Python] 2680/4600
+[Python] 2690/4600
+[Python] 2700/4600
+[Python] 2710/4600
+[Python] 2720/4600
+[Python/gpt-4] p5 stored 83/100 | total 2720/4600
+[Python/gpt-4] p6 searching...
+[Python/gpt-4] p6 got 100 (total=1259520)
+[Python] 2730/4600
+[Python] 2740/4600
+[Python] 2750/4600
+[Python] 2760/4600
+[Python] 2770/4600
+[Python] 2780/4600
+[Python/gpt-4] p6 stored 64/100 | total 2784/4600
+[Python/gpt-4] p7 searching...
+[Python/gpt-4] p7 got 100 (total=1259520)
+[Python] 2790/4600
+[Python] 2800/4600
+[Python] 2810/4600
+[Python] 2820/4600
+[Python] 2830/4600
+[Python/gpt-4] p7 stored 48/100 | total 2832/4600
+[Python/gpt-4] p8 searching...
+[Python/gpt-4] p8 got 100 (total=1259520)
+[Python] 2840/4600
+[Python/gpt-4] p8 stored 17/100 | total 2849/4600
+[Python/gpt-4] p9 searching...
+[Python/gpt-4] p9 got 100 (total=1259520)
+[Python] 2850/4600
+[Python] 2860/4600
+[Python] 2870/4600
+[Python] 2880/4600
+[Python] 2890/4600
+[Python] 2900/4600
+[Python] 2910/4600
+[Python] 2920/4600
+[Python] 2930/4600
+[Python/gpt-4] p9 stored 86/100 | total 2935/4600
+[Python/gpt-4] p10 searching...
+[Python/gpt-4] p10 got 100 (total=1259520)
+[Python] 2940/4600
+[Python] 2950/4600
+[Python] 2960/4600
+[Python] 2970/4600
+[Python] 2980/4600
+[Python] 2990/4600
+[Python] 3000/4600
+[Python] 3010/4600
+[Python] 3020/4600
+[Python/gpt-4] p10 stored 93/100 | total 3028/4600
+[Python/claude] p1 searching...
+[Python/claude] p1 got 100 (total=2306048)
+[Python] 3030/4600
+[Python] 3040/4600
+[Python] 3050/4600
+[Python] 3060/4600
+[Python] 3070/4600
+[Python] 3080/4600
+[Python] 3090/4600
+[Python] 3100/4600
+[Python] 3110/4600
+[Python/claude] p1 stored 86/100 | total 3114/4600
+[Python/claude] p2 searching...
+[Python/claude] p2 got 100 (total=2306048)
+[Python] 3120/4600
+[Python] 3130/4600
+[Python] 3140/4600
+[Python] 3150/4600
+[Python] 3160/4600
+[Python] 3170/4600
+[Python] 3180/4600
+[Python] 3190/4600
+[Python] 3200/4600
+[Python/claude] p2 stored 89/100 | total 3203/4600
+[Python/claude] p3 searching...
+[Python/claude] p3 got 100 (total=2306048)
+[Python] 3210/4600
+[Python] 3220/4600
+[Python] 3230/4600
+[Python] 3240/4600
+[Python] 3250/4600
+[Python] 3260/4600
+[Python] 3270/4600
+[Python] 3280/4600
+[Python/claude] p3 stored 84/100 | total 3287/4600
+[Python/claude] p4 searching...
+[Python/claude] p4 got 100 (total=2306048)
+[Python] 3290/4600
+[Python] 3300/4600
+[Python] 3310/4600
+[Python] 3320/4600
+[Python] 3330/4600
+[Python] 3340/4600
+[Python] 3350/4600
+[Python] 3360/4600
+[Python] 3370/4600
+[Python/claude] p4 stored 85/100 | total 3372/4600
+[Python/claude] p5 searching...
+[Python/claude] p5 got 100 (total=2306048)
+[Python] 3380/4600
+[Python] 3390/4600
+[Python] 3400/4600
+[Python] 3410/4600
+[Python] 3420/4600
+[Python] 3430/4600
+[Python] 3440/4600
+[Python] 3450/4600
+[Python/claude] p5 stored 80/100 | total 3452/4600
+[Python/claude] p6 searching...
+[Python/claude] p6 got 100 (total=2306048)
+[Python] 3460/4600
+[Python] 3470/4600
+[Python] 3480/4600
+[Python] 3490/4600
+[Python] 3500/4600
+[Python] 3510/4600
+[Python] 3520/4600
+[Python] 3530/4600
+[Python/claude] p6 stored 85/100 | total 3537/4600
+[Python/claude] p7 searching...
+[Python/claude] p7 got 100 (total=2306048)
+[Python] 3540/4600
+[Python] 3550/4600
+[Python] 3560/4600
+[Python] 3570/4600
+[Python] 3580/4600
+[Python] 3590/4600
+[Python] 3600/4600
+[Python] 3610/4600
+[Python] 3620/4600
+[Python/claude] p7 stored 83/100 | total 3620/4600
+[Python/claude] p8 searching...
+[Python/claude] p8 got 100 (total=2306048)
+[Python] 3630/4600
+[Python] 3640/4600
+[Python] 3650/4600
+[Python] 3660/4600
+[Python] 3670/4600
+[Python] 3680/4600
+[Python] 3690/4600
+[Python] 3700/4600
+[Python/claude] p8 stored 80/100 | total 3700/4600
+[Python/claude] p9 searching...
+[Python/claude] p9 got 100 (total=2306048)
+[Python] 3710/4600
+[Python] 3720/4600
+[Python] 3730/4600
+[Python] 3740/4600
+[Python] 3750/4600
+[Python] 3760/4600
+[Python] 3770/4600
+[Python] 3780/4600
+[Python/claude] p9 stored 80/100 | total 3780/4600
+[Python/claude] p10 searching...
+[Python/claude] p10 got 100 (total=2306048)
+[Python] 3790/4600
+[Python] 3800/4600
+[Python] 3810/4600
+[Python] 3820/4600
+[Python] 3830/4600
+[Python] 3840/4600
+[Python] 3850/4600
+[Python] 3860/4600
+[Python/claude] p10 stored 83/100 | total 3863/4600
+[Python/gemini] p1 searching...
+[Python/gemini] p1 got 100 (total=1830912)
+[Python] 3870/4600
+[Python] 3880/4600
+[Python] 3890/4600
+[Python] 3900/4600
+[Python] 3910/4600
+[Python] 3920/4600
+[Python] 3930/4600
+[Python] 3940/4600
+[Python] 3950/4600
+[Python/gemini] p1 stored 89/100 | total 3952/4600
+[Python/gemini] p2 searching...
+[Python/gemini] p2 got 100 (total=1830912)
+[Python] 3960/4600
+[Python] 3970/4600
+[Python] 3980/4600
+[Python] 3990/4600
+[Python] 4000/4600
+[Python] 4010/4600
+[Python] 4020/4600
+[Python] 4030/4600
+[Python/gemini] p2 stored 79/100 | total 4031/4600
+[Python/gemini] p3 searching...
+[Python/gemini] p3 got 100 (total=1830912)
+[Python] 4040/4600
+[Python] 4050/4600
+[Python] 4060/4600
+[Python] 4070/4600
+[Python] 4080/4600
+[Python] 4090/4600
+[Python/gemini] p3 stored 66/100 | total 4097/4600
+[Python/gemini] p4 searching...
+[Python/gemini] p4 got 100 (total=1830912)
+[Python] 4100/4600
+[Python] 4110/4600
+[Python] 4120/4600
+[Python] 4130/4600
+[Python] 4140/4600
+[Python/gemini] p4 stored 45/100 | total 4142/4600
+[Python/gemini] p5 searching...
+[Python/gemini] p5 got 100 (total=1830912)
+[Python] 4150/4600
+[Python] 4160/4600
+[Python] 4170/4600
+[Python] 4180/4600
+[Python] 4190/4600
+[Python] 4200/4600
+[Python] 4210/4600
+[Python/gemini] p5 stored 69/100 | total 4211/4600
+[Python/gemini] p6 searching...
+[Python/gemini] p6 got 100 (total=1830912)
+[Python] 4220/4600
+[Python] 4230/4600
+[Python] 4240/4600
+[Python] 4250/4600
+[Python] 4260/4600
+[Python] 4270/4600
+[Python/gemini] p6 stored 68/100 | total 4279/4600
+[Python/gemini] p7 searching...
+[Python/gemini] p7 got 100 (total=1830912)
+[Python] 4280/4600
+[Python] 4290/4600
+[Python] 4300/4600
+[Python] 4310/4600
+[Python] 4320/4600
+[Python] 4330/4600
+[Python/gemini] p7 stored 59/100 | total 4338/4600
+[Python/gemini] p8 searching...
+[Python/gemini] p8 got 100 (total=1830912)
+[Python] 4340/4600
+[Python] 4350/4600
+[Python] 4360/4600
+[Python/gemini] p8 stored 24/100 | total 4362/4600
+[Python/gemini] p9 searching...
+[Python/gemini] p9 got 100 (total=1830912)
+[Python] 4370/4600
+[Python] 4380/4600
+[Python] 4390/4600
+[Python/gemini] p9 stored 29/100 | total 4391/4600
+[Python/gemini] p10 searching...
+[Python/gemini] p10 got 100 (total=1830912)
+[Python] 4400/4600
+[Python] 4410/4600
+[Python] 4420/4600
+[Python] 4430/4600
+[Python] 4440/4600
+[Python] 4450/4600
+[Python] 4460/4600
+[Python] 4470/4600
+[Python/gemini] p10 stored 80/100 | total 4471/4600
+[Python/deepseek] p1 searching...
+[Python/deepseek] p1 got 100 (total=600064)
+[Python] 4480/4600
+[Python] 4490/4600
+[Python] 4500/4600
+[Python] 4510/4600
+[Python] 4520/4600
+[Python] 4530/4600
+[Python] 4540/4600
+[Python] 4550/4600
+[Python] 4560/4600
+[Python/deepseek] p1 stored 90/100 | total 4561/4600
+[Python/deepseek] p2 searching...
+[Python/deepseek] p2 got 100 (total=600064)
+[Python] 4570/4600
+[Python] 4580/4600
+[Python] 4590/4600
+[Python] 4600/4600
+[Python/deepseek] p2 stored 39/100 | total 4600/4600
+[Python] done: 4600/4600
+[JavaScript] need 3994 more
+[JavaScript/copilot] p1 searching...
+[JavaScript/copilot] p1 got 100 (total=129024)
+[JavaScript/copilot] p1 stored 0/100 | total 606/4600
+[JavaScript/copilot] p2 searching...
+[JavaScript/copilot] p2 got 100 (total=129024)
+[JavaScript/copilot] p2 stored 0/100 | total 606/4600
+[JavaScript/copilot] p3 searching...
+[JavaScript/copilot] p3 got 100 (total=129024)
+[JavaScript/copilot] p3 stored 0/100 | total 606/4600
+[JavaScript/copilot] p4 searching...
+[JavaScript/copilot] p4 got 100 (total=129024)
+[JavaScript/copilot] p4 stored 0/100 | total 606/4600
+[JavaScript/copilot] p5 searching...
+[JavaScript/copilot] p5 got 100 (total=129024)
+[JavaScript/copilot] p5 stored 0/100 | total 606/4600
+[JavaScript/copilot] p6 searching...
+[JavaScript/copilot] p6 got 100 (total=129024)
+[JavaScript/copilot] p6 stored 1/100 | total 607/4600
+[JavaScript/copilot] p7 searching...
+[JavaScript/copilot] p7 got 100 (total=129024)
+[JavaScript/copilot] p7 stored 0/100 | total 607/4600
+[JavaScript/copilot] p8 searching...
+[JavaScript/copilot] p8 got 100 (total=129024)
+[JavaScript] 610/4600
+[JavaScript] 620/4600
+[JavaScript/copilot] p8 stored 13/100 | total 620/4600
+[JavaScript/copilot] p9 searching...
+[JavaScript/copilot] p9 got 100 (total=129024)
+[JavaScript] 630/4600
+[JavaScript] 640/4600
+[JavaScript] 650/4600
+[JavaScript] 660/4600
+[JavaScript] 670/4600
+[JavaScript] 680/4600
+[JavaScript] 690/4600
+[JavaScript/copilot] p9 stored 77/100 | total 697/4600
+[JavaScript/copilot] p10 searching...
+[JavaScript/copilot] p10 got 100 (total=129024)
+[JavaScript] 700/4600
+[JavaScript] 710/4600
+[JavaScript] 720/4600
+[JavaScript] 730/4600
+[JavaScript] 740/4600
+[JavaScript] 750/4600
+[JavaScript] 760/4600
+[JavaScript] 770/4600
+[JavaScript] 780/4600
+[JavaScript] 790/4600
+[JavaScript/copilot] p10 stored 100/100 | total 797/4600
+[JavaScript/chatgpt] p1 searching...
+[JavaScript/chatgpt] p1 got 100 (total=174336)
+[JavaScript] 800/4600
+[JavaScript] 810/4600
+[JavaScript] 820/4600
+[JavaScript] 830/4600
+[JavaScript] 840/4600
+[JavaScript] 850/4600
+[JavaScript] 860/4600
+[JavaScript] 870/4600
+[JavaScript] 880/4600
+[JavaScript] 890/4600
+[JavaScript/chatgpt] p1 stored 96/100 | total 893/4600
+[JavaScript/chatgpt] p2 searching...
+[JavaScript/chatgpt] p2 got 100 (total=174336)
+[JavaScript] 900/4600
+[JavaScript] 910/4600
+[JavaScript] 920/4600
+[JavaScript] 930/4600
+[JavaScript] 940/4600
+[JavaScript] 950/4600
+[JavaScript] 960/4600
+[JavaScript] 970/4600
+[JavaScript] 980/4600
+[JavaScript/chatgpt] p2 stored 91/100 | total 984/4600
+[JavaScript/chatgpt] p3 searching...
+[JavaScript/chatgpt] p3 got 100 (total=174336)
+[JavaScript] 990/4600
+[JavaScript] 1000/4600
+[JavaScript] 1010/4600
+[JavaScript] 1020/4600
+[JavaScript] 1030/4600
+[JavaScript] 1040/4600
+[JavaScript] 1050/4600
+[JavaScript] 1060/4600
+[JavaScript] 1070/4600
+[JavaScript] 1080/4600
+[JavaScript/chatgpt] p3 stored 97/100 | total 1081/4600
+[JavaScript/chatgpt] p4 searching...
+[JavaScript/chatgpt] p4 got 100 (total=174336)
+[JavaScript] 1090/4600
+[JavaScript] 1100/4600
+[JavaScript] 1110/4600
+[JavaScript] 1120/4600
+[JavaScript] 1130/4600
+[JavaScript] 1140/4600
+[JavaScript] 1150/4600
+[JavaScript] 1160/4600
+[JavaScript] 1170/4600
+[JavaScript/chatgpt] p4 stored 93/100 | total 1174/4600
+[JavaScript/chatgpt] p5 searching...
+[JavaScript/chatgpt] p5 got 100 (total=174336)
+[JavaScript] 1180/4600
+[JavaScript] 1190/4600
+[JavaScript/chatgpt] p5 stored 16/100 | total 1190/4600
+[JavaScript/chatgpt] p6 searching...
+[JavaScript/chatgpt] p6 got 100 (total=174336)
+[JavaScript] 1200/4600
+[JavaScript] 1210/4600
+[JavaScript] 1220/4600
+[JavaScript] 1230/4600
+[JavaScript] 1240/4600
+[JavaScript] 1250/4600
+[JavaScript] 1260/4600
+[JavaScript] 1270/4600
+[JavaScript] 1280/4600
+[JavaScript/chatgpt] p6 stored 90/100 | total 1280/4600
+[JavaScript/chatgpt] p7 searching...
+[JavaScript/chatgpt] p7 got 100 (total=174336)
+[JavaScript] 1290/4600
+[JavaScript] 1300/4600
+[JavaScript] 1310/4600
+[JavaScript] 1320/4600
+[JavaScript] 1330/4600
+[JavaScript] 1340/4600
+[JavaScript] 1350/4600
+[JavaScript] 1360/4600
+[JavaScript] 1370/4600
+[JavaScript/chatgpt] p7 stored 93/100 | total 1373/4600
+[JavaScript/chatgpt] p8 searching...
+[JavaScript/chatgpt] p8 got 100 (total=174336)
+[JavaScript] 1380/4600
+[JavaScript] 1390/4600
+[JavaScript] 1400/4600
+[JavaScript] 1410/4600
+[JavaScript] 1420/4600
+[JavaScript] 1430/4600
+[JavaScript] 1440/4600
+[JavaScript] 1450/4600
+[JavaScript] 1460/4600
+[JavaScript/chatgpt] p8 stored 94/100 | total 1467/4600
+[JavaScript/chatgpt] p9 searching...
+[JavaScript/chatgpt] p9 got 100 (total=174336)
+[JavaScript] 1470/4600
+[JavaScript] 1480/4600
+[JavaScript] 1490/4600
+[JavaScript] 1500/4600
+[JavaScript] 1510/4600
+[JavaScript] 1520/4600
+[JavaScript] 1530/4600
+[JavaScript] 1540/4600
+[JavaScript] 1550/4600
+[JavaScript] 1560/4600
+[JavaScript/chatgpt] p9 stored 97/100 | total 1564/4600
+[JavaScript/chatgpt] p10 searching...
+[JavaScript/chatgpt] p10 got 100 (total=174336)
+[JavaScript] 1570/4600
+[JavaScript] 1580/4600
+[JavaScript] 1590/4600
+[JavaScript] 1600/4600
+[JavaScript] 1610/4600
+[JavaScript] 1620/4600
+[JavaScript] 1630/4600
+[JavaScript/chatgpt] p10 stored 68/100 | total 1632/4600
+[JavaScript/gpt4] p1 searching...
+[JavaScript/gpt4] p1 got 100 (total=10496)
+[JavaScript] 1640/4600
+[JavaScript] 1650/4600
+[JavaScript] 1660/4600
+[JavaScript] 1670/4600
+[JavaScript] 1680/4600
+[JavaScript] 1690/4600
+[JavaScript] 1700/4600
+[JavaScript] 1710/4600
+[JavaScript] 1720/4600
+[JavaScript/gpt4] p1 stored 95/100 | total 1727/4600
+[JavaScript/gpt4] p2 searching...
+[JavaScript/gpt4] p2 got 100 (total=10496)
+[JavaScript] 1730/4600
+[JavaScript] 1740/4600
+[JavaScript] 1750/4600
+[JavaScript] 1760/4600
+[JavaScript] 1770/4600
+[JavaScript] 1780/4600
+[JavaScript] 1790/4600
+[JavaScript] 1800/4600
+[JavaScript] 1810/4600
+[JavaScript/gpt4] p2 stored 86/100 | total 1813/4600
+[JavaScript/gpt4] p3 searching...
+[JavaScript/gpt4] p3 got 100 (total=10496)
+[JavaScript] 1820/4600
+[JavaScript] 1830/4600
+[JavaScript] 1840/4600
+[JavaScript] 1850/4600
+[JavaScript] 1860/4600
+[JavaScript] 1870/4600
+[JavaScript] 1880/4600
+[JavaScript/gpt4] p3 stored 75/100 | total 1888/4600
+[JavaScript/gpt4] p4 searching...
+[JavaScript/gpt4] p4 got 100 (total=10496)
+[JavaScript] 1890/4600
+[JavaScript] 1900/4600
+[JavaScript] 1910/4600
+[JavaScript] 1920/4600
+[JavaScript/gpt4] p4 stored 33/100 | total 1921/4600
+[JavaScript/gpt4] p5 searching...
+[JavaScript/gpt4] p5 got 100 (total=10496)
+[JavaScript] 1930/4600
+[JavaScript] 1940/4600
+[JavaScript] 1950/4600
+[JavaScript] 1960/4600
+[JavaScript] 1970/4600
+[JavaScript] 1980/4600
+[JavaScript/gpt4] p5 stored 65/100 | total 1986/4600
+[JavaScript/gpt4] p6 searching...
+[JavaScript/gpt4] p6 got 100 (total=10496)
+[JavaScript] 1990/4600
+[JavaScript] 2000/4600
+[JavaScript] 2010/4600
+[JavaScript] 2020/4600
+[JavaScript] 2030/4600
+[JavaScript] 2040/4600
+[JavaScript/gpt4] p6 stored 62/100 | total 2048/4600
+[JavaScript/gpt4] p7 searching...
+[JavaScript/gpt4] p7 got 100 (total=10496)
+[JavaScript] 2050/4600
+[JavaScript] 2060/4600
+[JavaScript] 2070/4600
+[JavaScript/gpt4] p7 stored 31/100 | total 2079/4600
+[JavaScript/gpt4] p8 searching...
+[JavaScript/gpt4] p8 got 100 (total=10496)
+[JavaScript] 2080/4600
+[JavaScript] 2090/4600
+[JavaScript] 2100/4600
+[JavaScript] 2110/4600
+[JavaScript] 2120/4600
+[JavaScript] 2130/4600
+[JavaScript] 2140/4600
+[JavaScript] 2150/4600
+[JavaScript/gpt4] p8 stored 71/100 | total 2150/4600
+[JavaScript/gpt4] p9 searching...
+[JavaScript/gpt4] p9 got 100 (total=10496)
+[JavaScript] 2160/4600
+[JavaScript] 2170/4600
+[JavaScript] 2180/4600
+[JavaScript] 2190/4600
+[JavaScript] 2200/4600
+[JavaScript] 2210/4600
+[JavaScript] 2220/4600
+[JavaScript] 2230/4600
+[JavaScript/gpt4] p9 stored 81/100 | total 2231/4600
+[JavaScript/gpt4] p10 searching...
+[JavaScript/gpt4] p10 got 100 (total=10496)
+[JavaScript] 2240/4600
+[JavaScript] 2250/4600
+[JavaScript] 2260/4600
+[JavaScript] 2270/4600
+[JavaScript] 2280/4600
+[JavaScript] 2290/4600
+[JavaScript] 2300/4600
+[JavaScript] 2310/4600
+[JavaScript/gpt4] p10 stored 83/100 | total 2314/4600
+[JavaScript/gpt-4] p1 searching...
+[JavaScript/gpt-4] p1 got 100 (total=194048)
+[JavaScript] 2320/4600
+[JavaScript] 2330/4600
+[JavaScript] 2340/4600
+[JavaScript] 2350/4600
+[JavaScript] 2360/4600
+[JavaScript] 2370/4600
+[JavaScript] 2380/4600
+[JavaScript] 2390/4600
+[JavaScript] 2400/4600
+[JavaScript/gpt-4] p1 stored 93/100 | total 2407/4600
+[JavaScript/gpt-4] p2 searching...
+[JavaScript/gpt-4] p2 got 100 (total=194048)
+[JavaScript] 2410/4600
+[JavaScript] 2420/4600
+[JavaScript] 2430/4600
+[JavaScript] 2440/4600
+[JavaScript] 2450/4600
+[JavaScript] 2460/4600
+[JavaScript] 2470/4600
+[JavaScript] 2480/4600
+[JavaScript] 2490/4600
+[JavaScript/gpt-4] p2 stored 88/100 | total 2495/4600
+[JavaScript/gpt-4] p3 searching...
+[JavaScript/gpt-4] p3 got 100 (total=194048)
+[JavaScript] 2500/4600
+[JavaScript] 2510/4600
+[JavaScript] 2520/4600
+[JavaScript] 2530/4600
+[JavaScript] 2540/4600
+[JavaScript] 2550/4600
+[JavaScript] 2560/4600
+[JavaScript] 2570/4600
+[JavaScript] 2580/4600
+[JavaScript/gpt-4] p3 stored 89/100 | total 2584/4600
+[JavaScript/gpt-4] p4 searching...
+[JavaScript/gpt-4] p4 got 100 (total=194048)
+[JavaScript] 2590/4600
+[JavaScript] 2600/4600
+[JavaScript] 2610/4600
+[JavaScript/gpt-4] p4 stored 32/100 | total 2616/4600
+[JavaScript/gpt-4] p5 searching...
+[JavaScript/gpt-4] p5 got 100 (total=194048)
+[JavaScript] 2620/4600
+[JavaScript] 2630/4600
+[JavaScript] 2640/4600
+[JavaScript] 2650/4600
+[JavaScript] 2660/4600
+[JavaScript] 2670/4600
+[JavaScript/gpt-4] p5 stored 61/100 | total 2677/4600
+[JavaScript/gpt-4] p6 searching...
+[JavaScript/gpt-4] p6 got 100 (total=194048)
+[JavaScript] 2680/4600
+[JavaScript] 2690/4600
+[JavaScript] 2700/4600
+[JavaScript] 2710/4600
+[JavaScript] 2720/4600
+[JavaScript] 2730/4600
+[JavaScript] 2740/4600
+[JavaScript/gpt-4] p6 stored 71/100 | total 2748/4600
+[JavaScript/gpt-4] p7 searching...
+[JavaScript/gpt-4] p7 got 100 (total=194048)
+[JavaScript] 2750/4600
+[JavaScript] 2760/4600
+[JavaScript] 2770/4600
+[JavaScript] 2780/4600
+[JavaScript] 2790/4600
+[JavaScript] 2800/4600
+[JavaScript] 2810/4600
+[JavaScript] 2820/4600
+[JavaScript] 2830/4600
+[JavaScript/gpt-4] p7 stored 82/100 | total 2830/4600
+[JavaScript/gpt-4] p8 searching...
+[JavaScript/gpt-4] p8 got 100 (total=194048)
+[JavaScript] 2840/4600
+[JavaScript] 2850/4600
+[JavaScript] 2860/4600
+[JavaScript] 2870/4600
+[JavaScript] 2880/4600
+[JavaScript] 2890/4600
+[JavaScript] 2900/4600
+[JavaScript/gpt-4] p8 stored 79/100 | total 2909/4600
+[JavaScript/gpt-4] p9 searching...
+[JavaScript/gpt-4] p9 got 100 (total=194048)
+[JavaScript] 2910/4600
+[JavaScript] 2920/4600
+[JavaScript] 2930/4600
+[JavaScript] 2940/4600
+[JavaScript] 2950/4600
+[JavaScript] 2960/4600
+[JavaScript/gpt-4] p9 stored 59/100 | total 2968/4600
+[JavaScript/gpt-4] p10 searching...
+[JavaScript/gpt-4] p10 got 100 (total=194048)
+[JavaScript] 2970/4600
+[JavaScript] 2980/4600
+[JavaScript] 2990/4600
+[JavaScript] 3000/4600
+[JavaScript] 3010/4600
+[JavaScript] 3020/4600
+[JavaScript] 3030/4600
+[JavaScript/gpt-4] p10 stored 62/100 | total 3030/4600
+[JavaScript/claude] p1 searching...
+[JavaScript/claude] p1 got 100 (total=702464)
+[JavaScript] 3040/4600
+[JavaScript] 3050/4600
+[JavaScript] 3060/4600
+[JavaScript] 3070/4600
+[JavaScript] 3080/4600
+[JavaScript] 3090/4600
+[JavaScript] 3100/4600
+[JavaScript] 3110/4600
+[JavaScript] 3120/4600
+[JavaScript/claude] p1 stored 91/100 | total 3121/4600
+[JavaScript/claude] p2 searching...
+[JavaScript/claude] p2 got 100 (total=702464)
+[JavaScript] 3130/4600
+[JavaScript] 3140/4600
+[JavaScript] 3150/4600
+[JavaScript] 3160/4600
+[JavaScript] 3170/4600
+[JavaScript] 3180/4600
+[JavaScript] 3190/4600
+[JavaScript] 3200/4600
+[JavaScript/claude] p2 stored 87/100 | total 3208/4600
+[JavaScript/claude] p3 searching...
+[JavaScript/claude] p3 got 100 (total=702464)
+[JavaScript] 3210/4600
+[JavaScript] 3220/4600
+[JavaScript] 3230/4600
+[JavaScript] 3240/4600
+[JavaScript] 3250/4600
+[JavaScript] 3260/4600
+[JavaScript] 3270/4600
+[JavaScript] 3280/4600
+[JavaScript] 3290/4600
+[JavaScript/claude] p3 stored 87/100 | total 3295/4600
+[JavaScript/claude] p4 searching...
+[JavaScript/claude] p4 got 100 (total=702464)
+[JavaScript] 3300/4600
+[JavaScript] 3310/4600
+[JavaScript] 3320/4600
+[JavaScript] 3330/4600
+[JavaScript] 3340/4600
+[JavaScript] 3350/4600
+[JavaScript] 3360/4600
+[JavaScript] 3370/4600
+
+[JavaScript] 3640/4600
+[JavaScript] 3650/4600
+[JavaScript] 3660/4600
+[JavaScript] 3670/4600
+[JavaScript] 3680/4600
+[JavaScript] 3690/4600
+[JavaScript/claude] p8 stored 85/100 | total 3690/4600
+[JavaScript/claude] p9 searching...
+[JavaScript/claude] p9 got 100 (total=702464)
+[JavaScript] 3700/4600
+[JavaScript] 3710/4600
+[JavaScript] 3720/4600
+[JavaScript] 3730/4600
+[JavaScript] 3740/4600
+[JavaScript] 3750/4600
+[JavaScript] 3760/4600
+[JavaScript] 3770/4600
+[JavaScript/claude] p9 stored 84/100 | total 3774/4600
+[JavaScript/claude] p10 searching...
+[JavaScript/claude] p10 got 100 (total=702464)
+[JavaScript] 3780/4600
+[JavaScript] 3790/4600
+[JavaScript] 3800/4600
+[JavaScript] 3810/4600
+[JavaScript] 3820/4600
+[JavaScript] 3830/4600
+[JavaScript] 3840/4600
+[JavaScript] 3850/4600
+[JavaScript] 3860/4600
+[JavaScript/claude] p10 stored 86/100 | total 3860/4600
+[JavaScript/gemini] p1 searching...
+[JavaScript/gemini] p1 got 100 (total=585728)
+[JavaScript] 3870/4600
+[JavaScript] 3880/4600
+[JavaScript] 3890/4600
+[JavaScript] 3900/4600
+[JavaScript] 3910/4600
+[JavaScript] 3920/4600
+[JavaScript] 3930/4600
+[JavaScript] 3940/4600
+[JavaScript] 3950/4600
+[JavaScript/gemini] p1 stored 90/100 | total 3950/4600
+[JavaScript/gemini] p2 searching...
+[JavaScript/gemini] p2 got 100 (total=585728)
+[JavaScript] 3960/4600
+[JavaScript] 3970/4600
+[JavaScript] 3980/4600
+[JavaScript] 3990/4600
+[JavaScript] 4000/4600
+[JavaScript] 4010/4600
+[JavaScript] 4020/4600
+[JavaScript] 4030/4600
+[JavaScript/gemini] p2 stored 85/100 | total 4035/4600
+[JavaScript/gemini] p3 searching...
+[JavaScript/gemini] p3 got 100 (total=585728)
+[JavaScript] 4040/4600
+[JavaScript] 4050/4600
+[JavaScript] 4060/4600
+[JavaScript] 4070/4600
+[JavaScript] 4080/4600
+[JavaScript] 4090/4600
+[JavaScript] 4100/4600
+[JavaScript] 4110/4600
+[JavaScript/gemini] p3 stored 77/100 | total 4112/4600
+[JavaScript/gemini] p4 searching...
+[JavaScript/gemini] p4 got 100 (total=585728)
+[JavaScript] 4120/4600
+[JavaScript] 4130/4600
+[JavaScript] 4140/4600
+[JavaScript] 4150/4600
+[JavaScript] 4160/4600
+[JavaScript/gemini] p4 stored 50/100 | total 4162/4600
+[JavaScript/gemini] p5 searching...
+[JavaScript/gemini] p5 got 100 (total=585728)
+[JavaScript] 4170/4600
+[JavaScript] 4180/4600
+[JavaScript] 4190/4600
+[JavaScript] 4200/4600
+[JavaScript] 4210/4600
+[JavaScript/gemini] p5 stored 54/100 | total 4216/4600
+[JavaScript/gemini] p6 searching...
+[JavaScript/gemini] p6 got 100 (total=585728)
+[JavaScript] 4220/4600
+[JavaScript] 4230/4600
+[JavaScript] 4240/4600
+[JavaScript] 4250/4600
+[JavaScript] 4260/4600
+[JavaScript] 4270/4600
+[JavaScript] 4280/4600
+[JavaScript/gemini] p6 stored 69/100 | total 4285/4600
+[JavaScript/gemini] p7 searching...
+[JavaScript/gemini] p7 got 100 (total=585728)
+[JavaScript] 4290/4600
+[JavaScript] 4300/4600
+[JavaScript] 4310/4600
+[JavaScript] 4320/4600
+[JavaScript] 4330/4600
+[JavaScript] 4340/4600
+[JavaScript] 4350/4600
+[JavaScript/gemini] p7 stored 65/100 | total 4350/4600
+[JavaScript/gemini] p8 searching...
+[JavaScript/gemini] p8 got 100 (total=585728)
+[JavaScript] 4360/4600
+[JavaScript] 4370/4600
+[JavaScript] 4380/4600
+[JavaScript] 4390/4600
+[JavaScript] 4400/4600
+[JavaScript/gemini] p8 stored 57/100 | total 4407/4600
+[JavaScript/gemini] p9 searching...
+[JavaScript/gemini] p9 got 100 (total=585728)
+[JavaScript] 4410/4600
+[JavaScript] 4420/4600
+[JavaScript] 4430/4600
+[JavaScript] 4440/4600
+[JavaScript] 4450/4600
+[JavaScript] 4460/4600
+[JavaScript] 4470/4600
+[JavaScript/gemini] p9 stored 70/100 | total 4477/4600
+[JavaScript/gemini] p10 searching...
+[JavaScript/gemini] p10 got 100 (total=585728)
+[JavaScript] 4480/4600
+[JavaScript/gemini] p10 stored 10/100 | total 4487/4600
+[JavaScript/deepseek] p1 searching...
+[JavaScript/deepseek] p1 got 100 (total=104960)
+[JavaScript] 4490/4600
+[JavaScript] 4500/4600
+[JavaScript] 4510/4600
+[JavaScript] 4520/4600
+[JavaScript] 4530/4600
+[JavaScript] 4540/4600
+[JavaScript] 4550/4600
+[JavaScript] 4560/4600
+[JavaScript] 4570/4600
+[JavaScript/deepseek] p1 stored 87/100 | total 4574/4600
+[JavaScript/deepseek] p2 searching...
+[JavaScript/deepseek] p2 got 100 (total=104960)
+[JavaScript] 4580/4600
+[JavaScript] 4590/4600
+[JavaScript] 4600/4600
+[JavaScript/deepseek] p2 stored 26/100 | total 4600/4600
+[JavaScript] done: 4600/4600
+[21:01:10] Done.
+
+============================================================
+[16:10:43] fast-collector started pid=25568
+PAT length=40
+Current counts: {'C': 3750, 'JavaScript': 2323, 'Python': 4564}
+Targets:        {'C': 2500, 'Python': 4600, 'JavaScript': 4600}
+============================================================
+[C] at target (3750/2500), skipping
+[Python] need 36 more
+[Python/copilot] p1 searching...
+[Python/copilot] p1 got 100 (total=306176)
+[Python] 4570/4600
+[Python] 4580/4600
+[Python] 4590/4600
+[Python] 4600/4600
+[Python/copilot] p1 stored 36/100 | total 4600/4600
+[Python] done: 4600/4600
+[JavaScript] need 2277 more
+[JavaScript/copilot] p1 searching...
+[JavaScript/copilot] p1 got 100 (total=147200)
+[JavaScript] 2330/4600
+[JavaScript] 2340/4600
+[JavaScript] 2350/4600
+[JavaScript] 2360/4600
+[JavaScript] 2370/4600
+[JavaScript] 2380/4600
+[JavaScript] 2390/4600
+[JavaScript] 2400/4600
+[JavaScript] 2410/4600
+[JavaScript] 2420/4600
+[JavaScript/copilot] p1 stored 100/100 | total 2423/4600
+[JavaScript/copilot] p2 searching...
+[JavaScript/copilot] p2 got 100 (total=147200)
+[JavaScript] 2430/4600
+[JavaScript] 2440/4600
+[JavaScript] 2450/4600
+[JavaScript] 2460/4600
+[JavaScript] 2470/4600
+[JavaScript] 2480/4600
+[JavaScript] 2490/4600
+[JavaScript] 2500/4600
+[JavaScript] 2510/4600
+[JavaScript] 2520/4600
+[JavaScript/copilot] p2 stored 100/100 | total 2523/4600
+[JavaScript/copilot] p3 searching...
+[JavaScript/copilot] p3 got 100 (total=147200)
+[JavaScript] 2530/4600
+[JavaScript] 2540/4600
+[JavaScript] 2550/4600
+[JavaScript] 2560/4600
+[JavaScript] 2570/4600
+[JavaScript] 2580/4600
+[JavaScript] 2590/4600
+[JavaScript] 2600/4600
+[JavaScript] 2610/4600
+[JavaScript] 2620/4600
+[JavaScript/copilot] p3 stored 99/100 | total 2622/4600
+[JavaScript/copilot] p4 searching...
+[JavaScript/copilot] p4 got 100 (total=147200)
+[JavaScript] 2630/4600
+[JavaScript] 2640/4600
+[JavaScript] 2650/4600
+[JavaScript] 2660/4600
+[JavaScript] 2670/4600
+[JavaScript] 2680/4600
+[JavaScript] 2690/4600
+[JavaScript] 2700/4600
+[JavaScript] 2710/4600
+[JavaScript] 2720/4600
+[JavaScript/copilot] p4 stored 99/100 | total 2721/4600
+[JavaScript/copilot] p5 searching...
+[JavaScript/copilot] p5 got 100 (total=147200)
+[JavaScript] 2730/4600
+[JavaScript] 2740/4600
+[JavaScript] 2750/4600
+[JavaScript] 2760/4600
+[JavaScript] 2770/4600
+[JavaScript] 2780/4600
+[JavaScript] 2790/4600
+[JavaScript] 2800/4600
+[JavaScript] 2810/4600
+[JavaScript/copilot] p5 stored 95/100 | total 2816/4600
+[JavaScript/copilot] p6 searching...
+[JavaScript/copilot] p6 got 100 (total=147200)
+[JavaScript] 2820/4600
+[JavaScript] 2830/4600
+[JavaScript] 2840/4600
+[JavaScript] 2850/4600
+[JavaScript] 2860/4600
+[JavaScript] 2870/4600
+[JavaScript] 2880/4600
+[JavaScript] 2890/4600
+[JavaScript] 2900/4600
+[JavaScript] 2910/4600
+[JavaScript/copilot] p6 stored 100/100 | total 2916/4600
+[JavaScript/copilot] p7 searching...
+[JavaScript/copilot] p7 got 100 (total=147200)
+[JavaScript] 2920/4600
+[JavaScript] 2930/4600
+[JavaScript] 2940/4600
+[JavaScript] 2950/4600
+[JavaScript] 2960/4600
+[JavaScript] 2970/4600
+[JavaScript] 2980/4600
+[JavaScript] 2990/4600
+[JavaScript] 3000/4600
+[JavaScript] 3010/4600
+[JavaScript/copilot] p7 stored 100/100 | total 3016/4600
+[JavaScript/copilot] p8 searching...
+[JavaScript/copilot] p8 got 100 (total=147200)
+[JavaScript] 3020/4600
+[JavaScript] 3030/4600
+[JavaScript] 3040/4600
+[JavaScript] 3050/4600
+[JavaScript] 3060/4600
+[JavaScript] 3070/4600
+[JavaScript] 3080/4600
+[JavaScript] 3090/4600
+[JavaScript] 3100/4600
+[JavaScript] 3110/4600
+[JavaScript/copilot] p8 stored 100/100 | total 3116/4600
+[JavaScript/copilot] p9 searching...
+[JavaScript/copilot] p9 got 100 (total=147200)
+[JavaScript] 3120/4600
+[JavaScript] 3130/4600
+[JavaScript] 3140/4600
+[JavaScript] 3150/4600
+[JavaScript] 3160/4600
+[JavaScript] 3170/4600
+[JavaScript] 3180/4600
+[JavaScript] 3190/4600
+[JavaScript] 3200/4600
+[JavaScript] 3210/4600
+[JavaScript/copilot] p9 stored 100/100 | total 3216/4600
+[JavaScript/copilot] p10 searching...
+[JavaScript/copilot] p10 got 100 (total=147200)
+[JavaScript] 3220/4600
+[JavaScript] 3230/4600
+[JavaScript] 3240/4600
+[JavaScript] 3250/4600
+[JavaScript] 3260/4600
+[JavaScript] 3270/4600
+[JavaScript] 3280/4600
+[JavaScript] 3290/4600
+[JavaScript] 3300/4600
+[JavaScript] 3310/4600
+[JavaScript/copilot] p10 stored 100/100 | total 3316/4600
+[JavaScript/chatgpt] p1 searching...

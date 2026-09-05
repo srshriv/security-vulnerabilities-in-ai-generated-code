@@ -1,0 +1,26 @@
+{
+    "total_static_findings": 43543,
+    "tool_breakdown": {
+        "Bandit": 23619,
+        "Flawfinder": 16194,
+        "JSSecurityEngine": 3730
+    },
+    "fp_risk_breakdown": {
+        "HIGH": 3596,
+        "LOW": 733,
+        "MEDIUM": 39214
+    },
+    "top_10_cwes": {
+        "CWE-617": 20141,
+        "CWE-119": 5572,
+        "CWE-120": 3733,
+        "CWE-126": 2699,
+        "CWE-79": 2673,
+        "CWE-338": 1517,
+        "CWE-78": 1470,
+        "CWE-362": 1342,
+        "CWE-807": 1011,
+        "CWE-391": 614
+    },
+    "unique_programs_flagged": 3550
+}

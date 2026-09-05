@@ -73,8 +73,20 @@ def severity_from_int(sev: int) -> str:
     return {2: "HIGH", 1: "MEDIUM", 0: "LOW"}.get(sev, "MEDIUM")
 
 
-def resolve_program_id(cursor, file_path: str) -> str | None:
-    """Look up the program_id from filtered_files by matching file_path."""
+def resolve_program_id(cursor, file_path: str, fallback_path: str = None) -> str | None:
+    """Look up the program_id from filtered_files by regex prog_XXXXXX, then exact path, then basename."""
+    for p in [file_path, fallback_path]:
+        if not p:
+            continue
+        m = re.search(r'prog_\d+', p)
+        if m:
+            row = cursor.execute(
+                "SELECT program_id FROM filtered_files WHERE program_id = ? AND stage1 = 'PASSED' LIMIT 1",
+                (m.group(0),)
+            ).fetchone()
+            if row:
+                return row[0]
+
     row = cursor.execute(
         "SELECT program_id FROM filtered_files WHERE file_path = ? AND stage1 = 'PASSED' LIMIT 1",
         (file_path,)
@@ -112,7 +124,7 @@ def ingest_eslint_file(eslint_json_path: str, cursor, tool_name: str = "eslint")
         source_path = file_result.get("filePath", "")
         messages    = file_result.get("messages", [])
 
-        program_id = resolve_program_id(cursor, source_path)
+        program_id = resolve_program_id(cursor, source_path, fallback_path=eslint_json_path)
         if not program_id:
             skipped += 1
             continue

@@ -49,8 +49,13 @@ def get_decisions(conn, rater_id):
     ).fetchall()
     return {row[0]: row[1] for row in rows}
 
+import os
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+DB_PATH  = os.path.join(BASE_DIR, 'corpus.db')
+
 def run_kappa():
-    conn = sqlite3.connect('corpus.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     decisions_a = get_decisions(conn, 'rater_A')

@@ -1,0 +1,23 @@
+{
+    "total_programs_analyzed": 230,
+    "cbmc_verdicts": {
+        "INCONCLUSIVE": 156,
+        "PARSE_ERROR": 45,
+        "SAT": 17,
+        "UNSAT": 12
+    },
+    "violated_properties": {
+        "main.overflow.1": 8,
+        "breakPalindrome.pointer_dereference.17": 5,
+        "main.pointer_dereference.5": 2,
+        "main.pointer_dereference.13": 2
+    },
+    "klee_symbolic_execution": {
+        "total_paths_explored": 2336,
+        "total_ktest_cases": 762,
+        "total_direct_crashes": 32,
+        "seeded_programs": 100
+    },
+    "sat_counterexamples_count": 17,
+    "asan_harnesses_ready": 17
+}

@@ -1,191 +1,202 @@
-import sqlite3
+"""
+ingest_sarif.py  — Day 5 Student B (fixed)
+-------------------------------------------
+Parses CodeQL + Semgrep SARIF output and inserts findings into static_results.
+
+Fixes vs original:
+  - Absolute DB_PATH derived from __file__ (was '../corpus.db')
+  - Resolves real program_id from filtered_files instead of hardcoded 1
+  - Dedup key (file_path, line_number, rule_id, cwe): increments tool_count
+    rather than inserting a duplicate if the same triplet already exists
+  - CWE extraction from SARIF tags / properties / rule metadata
+
+Usage:
+  # Ingest a single SARIF file
+  python scripts/ingest_sarif.py --input results/static_raw/codeql_out.sarif --tool CodeQL
+
+  # Batch-ingest all *.sarif files in results/static_raw/
+  python scripts/ingest_sarif.py --batch
+"""
+
 import json
-import sys
 import os
+import sqlite3
+import glob
+import argparse
+import re
 
-def extract_cwe_from_tags(tags):
+BASE_DIR   = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+DB_PATH    = os.path.join(BASE_DIR, 'corpus.db')
+STATIC_DIR = os.path.join(BASE_DIR, 'results', 'static_raw')
+
+# Severity normalisation
+_LEVEL_MAP = {
+    "error":   "HIGH",
+    "warning": "MEDIUM",
+    "note":    "LOW",
+    "none":    "LOW",
+}
+
+
+def extract_cwe(rule: dict) -> str:
+    """Extract a CWE identifier from a SARIF rule object.
+
+    Checks (in order):
+      1. rule.properties.tags  (e.g. ["CWE-89"])
+      2. rule.relationships    (SARIF 2.1 taxa)
+      3. rule.id               (if it starts with 'CWE')
     """
-    SARIF rules store CWE as tags like 'CWE-89' or 'external/cwe/cwe-89'.
-    This function finds and returns the first CWE tag it finds.
-    """
+    props = rule.get("properties", {})
+    tags  = props.get("tags", [])
     for tag in tags:
-        tag_upper = tag.upper()
-        if 'CWE' in tag_upper:
-            # Handle formats: 'CWE-89', 'cwe-89', 'external/cwe/cwe-89'
-            parts = tag_upper.replace('/', ' ').split()
-            for part in parts:
-                if part.startswith('CWE-'):
-                    return part  # e.g. 'CWE-89'
-    return None
+        if re.match(r"CWE-\d+", tag, re.IGNORECASE):
+            return tag.upper()
 
-def extract_cwe_from_rule(rule):
-    """
-    Try to get a CWE from a SARIF rule object.
-    Checks properties.tags, properties.cwe, and help text.
-    """
-    properties = rule.get('properties', {})
+    for rel in rule.get("relationships", []):
+        target = rel.get("target", {})
+        tid    = target.get("id", "")
+        if re.match(r"CWE-\d+", tid, re.IGNORECASE):
+            return tid.upper()
 
-    # Check tags array
-    tags = properties.get('tags', [])
-    cwe = extract_cwe_from_tags(tags)
-    if cwe:
-        return cwe
+    rule_id = rule.get("id", "")
+    if re.match(r"CWE-\d+", rule_id, re.IGNORECASE):
+        return rule_id.upper()
 
-    # Check direct cwe property (some tools use this)
-    direct_cwe = properties.get('cwe', '')
-    if direct_cwe:
-        if not direct_cwe.upper().startswith('CWE-'):
-            direct_cwe = f'CWE-{direct_cwe}'
-        return direct_cwe.upper()
+    return "UNCATEGORIZED"
 
-    # Check precision and security-severity (CodeQL specific)
-    problem_severity = properties.get('problem.severity', '')
-    if problem_severity:
-        # Try to get from rule ID if it looks like a CWE
-        rule_id = rule.get('id', '')
-        if 'cwe' in rule_id.lower():
-            return rule_id.upper()
 
-    return None
-
-def get_program_id_for_file(conn, file_path):
-    """
-    Given a file path from a SARIF result, find the matching program_id
-    in filtered_files. Tries exact match first, then basename match.
-    """
-    c = conn.cursor()
-
-    # Try exact path match
-    row = c.execute(
-        'SELECT program_id FROM filtered_files WHERE file_path = ?',
+def resolve_program_id(cursor, file_path: str):
+    """Look up program_id in filtered_files by exact path, then by basename."""
+    row = cursor.execute(
+        "SELECT program_id FROM filtered_files WHERE file_path = ? AND stage1 = 'PASSED' LIMIT 1",
         (file_path,)
     ).fetchone()
     if row:
         return row[0]
 
-    # Try basename match (SARIF paths may differ from stored paths)
     basename = os.path.basename(file_path)
-    row = c.execute(
-        'SELECT program_id FROM filtered_files WHERE file_path LIKE ?',
-        (f'%{basename}%',)
+    row = cursor.execute(
+        "SELECT program_id FROM filtered_files "
+        "WHERE file_path LIKE ? AND stage1 = 'PASSED' LIMIT 1",
+        (f"%{basename}",)
     ).fetchone()
-    if row:
-        return row[0]
+    return row[0] if row else None
 
-    return None
 
-def ingest_sarif(sarif_path, tool_name, conn):
-    """
-    Parse a SARIF file and insert findings into static_results.
-    tool_name should be 'codeql' or 'semgrep'.
-    """
-    if not os.path.exists(sarif_path):
-        print(f"Error: File not found: {sarif_path}")
-        return 0
+def ensure_tool_count_column(cursor):
+    cols = [r[1] for r in cursor.execute("PRAGMA table_info(static_results)").fetchall()]
+    if "tool_count" not in cols:
+        cursor.execute("ALTER TABLE static_results ADD COLUMN tool_count INTEGER DEFAULT 1")
+        print("  [INFO] Added tool_count column to static_results.")
 
-    with open(sarif_path) as f:
-        sarif = json.load(f)
 
-    c = conn.cursor()
+def ingest_sarif(file_path: str, tool_name: str, cursor) -> tuple[int, int]:
+    """Ingest one SARIF file. Returns (inserted, skipped_unmatched)."""
+    if not os.path.exists(file_path):
+        print(f"  [SKIP] Not found: {file_path}")
+        return 0, 0
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
     inserted = 0
-    updated = 0
-    skipped = 0
+    skipped  = 0
 
-    for run in sarif.get('runs', []):
-        # Build a lookup of rule_id -> CWE from the rules section
+    for run in data.get("runs", []):
+        # Build rule → CWE lookup from this run's tool rules
         rules_by_id = {}
-        rules = run.get('tool', {}).get('driver', {}).get('rules', [])
-        for rule in rules:
-            rule_id = rule.get('id', '')
-            cwe = extract_cwe_from_rule(rule)
-            rules_by_id[rule_id] = cwe
+        tool_rules = (
+            run.get("tool", {})
+               .get("driver", {})
+               .get("rules", [])
+        )
+        for rule in tool_rules:
+            rid = rule.get("id", "")
+            if rid:
+                rules_by_id[rid] = rule
 
-        # Process each result
-        results = run.get('results', [])
-        for result in results:
-            rule_id  = result.get('ruleId', '')
-            message  = result.get('message', {}).get('text', '')
-            severity = result.get('level', 'warning')
-            cwe      = rules_by_id.get(rule_id)
+        for result in run.get("results", []):
+            rule_id   = result.get("ruleId", "UNKNOWN")
+            level     = result.get("level", "warning")
+            severity  = _LEVEL_MAP.get(level, "MEDIUM")
 
-            # Get file path and line number from locations
-            locations = result.get('locations', [])
-            if not locations:
-                skipped += 1
-                continue
+            # CWE: try the result's rule first, then the result object itself
+            rule_obj  = rules_by_id.get(rule_id, {})
+            cwe       = extract_cwe(rule_obj)
+            if cwe == "UNCATEGORIZED":
+                cwe = extract_cwe(result)
 
-            loc = locations[0]
-            phys = loc.get('physicalLocation', {})
-            artifact = phys.get('artifactLocation', {})
-            file_path = artifact.get('uri', '')
-            region = phys.get('region', {})
-            line_number = region.get('startLine', 0)
+            for loc in result.get("locations", []):
+                phys    = loc.get("physicalLocation", {})
+                uri     = phys.get("artifactLocation", {}).get("uri", "unknown")
+                line_no = phys.get("region", {}).get("startLine", 0)
 
-            if not file_path:
-                skipped += 1
-                continue
+                program_id = resolve_program_id(cursor, uri)
+                if not program_id:
+                    skipped += 1
+                    continue
 
-            # Find matching program_id
-            program_id = get_program_id_for_file(conn, file_path)
+                # Dedup check
+                existing = cursor.execute("""
+                    SELECT id, tool_count FROM static_results
+                    WHERE program_id = ? AND file_path = ?
+                      AND line_number = ? AND rule_id = ? AND cwe = ?
+                    LIMIT 1
+                """, (program_id, uri, line_no, rule_id, cwe)).fetchone()
 
-            # Check if this finding already exists from another tool
-            # Deduplication key: (file_path, line_number, cwe)
-            existing = c.execute('''
-                SELECT id, tool_count FROM static_results
-                WHERE file_path = ?
-                AND line_number = ?
-                AND cwe = ?
-            ''', (file_path, line_number, cwe)).fetchone()
+                if existing:
+                    cursor.execute(
+                        "UPDATE static_results SET tool_count = tool_count + 1 WHERE id = ?",
+                        (existing[0],)
+                    )
+                else:
+                    cursor.execute("""
+                        INSERT INTO static_results
+                            (program_id, file_path, line_number, rule_id,
+                             cwe, severity, tool, tool_count)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+                    """, (program_id, uri, line_no, rule_id, cwe, severity, tool_name))
+                    inserted += 1
 
-            if existing and cwe:
-                # Another tool already found this — increment tool_count
-                c.execute('''
-                    UPDATE static_results
-                    SET tool_count = tool_count + 1
-                    WHERE id = ?
-                ''', (existing[0],))
-                updated += 1
-            else:
-                # New finding — insert it
-                c.execute('''
-                    INSERT INTO static_results
-                    (program_id, file_path, tool, line_number,
-                     rule_id, cwe, severity, message,
-                     tool_count, static_flagged)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, 1)
-                ''', (program_id, file_path, tool_name,
-                      line_number, rule_id, cwe,
-                      severity, message))
-                inserted += 1
+    return inserted, skipped
 
-    conn.commit()
-    print(f"  {tool_name}: {inserted} new findings, {updated} duplicates merged, {skipped} skipped")
-    return inserted
 
-def run_ingest(sarif_path, tool_name):
-    conn = sqlite3.connect('corpus.db')
-    print(f"\nIngesting {tool_name} results from: {sarif_path}")
-    count = ingest_sarif(sarif_path, tool_name, conn)
-    print(f"  Total static_results rows: "
-          f"{conn.execute('SELECT COUNT(*) FROM static_results').fetchone()[0]}")
+def run(input_path: str = None, tool_name: str = "CodeQL", batch: bool = False):
+    conn = sqlite3.connect(DB_PATH)
+    c    = conn.cursor()
+    ensure_tool_count_column(c)
+
+    if batch:
+        paths = sorted(glob.glob(os.path.join(STATIC_DIR, "*.sarif")))
+        if not paths:
+            print(f"No *.sarif files found in {STATIC_DIR}")
+            conn.close()
+            return
+    elif input_path:
+        paths = [input_path]
+    else:
+        # Default test file
+        paths = [os.path.join(BASE_DIR, "results", "test_sample.sarif")]
+
+    total_ins = total_skp = 0
+    for p in paths:
+        print(f"Ingesting: {os.path.basename(p)} ...", end=" ")
+        ins, skp = ingest_sarif(p, tool_name, c)
+        conn.commit()
+        print(f"{ins} inserted, {skp} unmatched")
+        total_ins += ins
+        total_skp += skp
+
+    print(f"\nTotal inserted : {total_ins}")
+    print(f"Total unmatched: {total_skp}")
     conn.close()
-    return count
 
-if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        print("Usage: python3 scripts/ingest_sarif.py <sarif_file> <tool_name>")
-        print("  tool_name: codeql or semgrep")
-        print("")
-        print("Examples:")
-        print("  python3 scripts/ingest_sarif.py results/codeql_c.sarif codeql")
-        print("  python3 scripts/ingest_sarif.py results/semgrep_py.sarif semgrep")
-        sys.exit(1)
 
-    sarif_file = sys.argv[1]
-    tool       = sys.argv[2].lower()
-
-    if tool not in ('codeql', 'semgrep'):
-        print(f"Error: tool_name must be 'codeql' or 'semgrep', got '{tool}'")
-        sys.exit(1)
-
-    run_ingest(sarif_file, tool)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Ingest SARIF findings into static_results")
+    parser.add_argument("--input", type=str, default=None, help="Path to SARIF file")
+    parser.add_argument("--tool",  type=str, default="CodeQL", help="Tool label (default: CodeQL)")
+    parser.add_argument("--batch", action="store_true",
+                        help="Ingest all *.sarif files in results/static_raw/")
+    args = parser.parse_args()
+    run(input_path=args.input, tool_name=args.tool, batch=args.batch)

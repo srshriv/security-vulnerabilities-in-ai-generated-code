@@ -1,3 +1,4 @@
+
 import sqlite3
 import sys
 import os
@@ -53,7 +54,7 @@ def get_decision():
         else:
             print("Invalid input. Please type Y, N, U, S, or Q.")
 
-def run_rater(limit=100):
+def run_rater(rater_id="rater_A", limit=100):
     conn = sqlite3.connect('corpus.db')
     c = conn.cursor()
 
@@ -69,7 +70,7 @@ def run_rater(limit=100):
             WHERE rater_id = ?
         )
         LIMIT ?
-    ''', (RATER_ID, limit)).fetchall()
+    ''', (rater_id, limit)).fetchall()
 
     if not rows:
         print("No files left to rate. Either all files have been rated")
@@ -78,7 +79,7 @@ def run_rater(limit=100):
         return
 
     print(f"\nFound {len(rows)} files to rate.")
-    print(f"Rating as: {RATER_ID}")
+    print(f"Rating as: {rater_id}")
     print("Press Enter to begin...")
     input()
 
@@ -93,7 +94,7 @@ def run_rater(limit=100):
         # Show progress
         total_rated = c.execute(
             'SELECT COUNT(*) FROM rater_decisions WHERE rater_id = ?',
-            (RATER_ID,)
+            (rater_id,)
         ).fetchone()[0]
         print(f"\nProgress: {total_rated} rated so far | {rated} in this session")
 
@@ -112,13 +113,13 @@ def run_rater(limit=100):
             INSERT OR REPLACE INTO rater_decisions
             (file_id, rater_id, decision, note, timestamp)
             VALUES (?, ?, ?, ?, ?)
-        ''', (file_id, RATER_ID, decision, note, datetime.now().isoformat()))
+        ''', (file_id, rater_id, decision, note, datetime.now().isoformat()))
         conn.commit()
         rated += 1
 
     total = c.execute(
         'SELECT COUNT(*) FROM rater_decisions WHERE rater_id = ?',
-        (RATER_ID,)
+        (rater_id,)
     ).fetchone()[0]
 
     conn.close()
@@ -127,7 +128,7 @@ def run_rater(limit=100):
     print(f"Skipped            : {skipped}")
     print(f"Total rated so far : {total}")
 
-def show_progress():
+def show_progress(rater_id="rater_A"):
     conn = sqlite3.connect('corpus.db')
     c = conn.cursor()
 
@@ -141,15 +142,29 @@ def show_progress():
     total = c.execute("SELECT COUNT(*) FROM filtered_files WHERE stage1='PASSED'").fetchone()[0]
     rated = c.execute(
         'SELECT COUNT(DISTINCT file_id) FROM rater_decisions WHERE rater_id = ?',
-        (RATER_ID,)
+        (rater_id,)
     ).fetchone()[0]
     print(f"\nTotal files in database : {total}")
-    print(f"Rated by {RATER_ID:<10}    : {rated}")
+    print(f"Rated by {rater_id:<10}    : {rated}")
     conn.close()
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1 and sys.argv[1] == 'progress':
-        show_progress()
+    import argparse
+    parser = argparse.ArgumentParser(description="Human Rater Tool for AI Code Corpus")
+    parser.add_argument("--rater", type=str, default="rater_A", help="Rater ID (e.g. rater_A or rater_B)")
+    parser.add_argument("--limit", type=int, default=100, help="Number of files to rate")
+    parser.add_argument("command", nargs="?", default=None, help="Command (e.g. 'progress')")
+    
+    args, remaining = parser.parse_known_args()
+    
+    if args.command == 'progress' or (len(sys.argv) > 1 and sys.argv[1] == 'progress'):
+        show_progress(args.rater)
     else:
-        limit = int(sys.argv[1]) if len(sys.argv) > 1 else 100
-        run_rater(limit)
+        # Check if positional int limit was passed
+        limit_val = args.limit
+        if remaining:
+            try:
+                limit_val = int(remaining[0])
+            except ValueError:
+                pass
+        run_rater(rater_id=args.rater, limit=limit_val)

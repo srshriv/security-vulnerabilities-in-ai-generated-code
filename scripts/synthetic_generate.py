@@ -28,7 +28,7 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__
 DB_PATH = os.path.join(BASE_DIR, 'corpus.db')
 PROMPTS_FILE = os.path.join(BASE_DIR, 'securityeval_extended.json')
 
-MODELS = ['gpt-4o', 'claude-sonnet', 'gemini-2.5-pro', 'deepseek-coder']
+MODELS = ['gpt-4o', 'claude-sonnet', 'gemini', 'gemini-flash', 'gemini-2.5-pro', 'deepseek-coder']
 
 SYSTEM_PROMPT = (
     "You are an expert C programmer. Generate standalone, syntactically valid C code "
@@ -114,29 +114,62 @@ def call_google_gemini(prompt):
     api_key = os.getenv('GEMINI_API_KEY') or os.getenv('GOOGLE_API_KEY')
     if not api_key:
         return None, "GEMINI_API_KEY or GOOGLE_API_KEY not set"
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key={api_key}"
-    payload = {
-        "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]},
-        "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.0}
-    }
-    try:
-        resp = requests.post(url, json=payload, timeout=45)
-        if resp.status_code != 200:
-            fallback_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={api_key}"
-            resp = requests.post(fallback_url, json=payload, timeout=45)
-            if resp.status_code != 200:
-                return None, f"HTTP {resp.status_code}: {resp.text[:200]}"
-        content = resp.json()['candidates'][0]['content']['parts'][0]['text']
-        return strip_markdown(content), None
-    except Exception as e:
-        return None, f"Network error: {e}"
+    
+    model_candidates = [
+        "gemini-flash-latest",
+        "gemini-3.1-flash-lite-preview",
+        "gemini-2.5-flash",
+        "gemini-2.5-pro"
+    ]
+    
+    last_err = None
+    for model in model_candidates:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+        payload = {
+            "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]},
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.0}
+        }
+        try:
+            resp = requests.post(url, json=payload, timeout=30)
+            if resp.status_code == 200:
+                content = resp.json()['candidates'][0]['content']['parts'][0]['text']
+                return strip_markdown(content), None
+            else:
+                last_err = f"HTTP {resp.status_code}: {resp.text[:200]}"
+        except Exception as e:
+            last_err = f"Network error: {e}"
+            
+    return None, last_err
 
 
 def call_deepseek_coder(prompt):
+    openrouter_key = os.getenv('OPENROUTER_API_KEY')
+    if openrouter_key:
+        url = "https://openrouter.ai/api/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {openrouter_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": "deepseek/deepseek-chat",
+            "temperature": 0.0,
+            "messages": [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": prompt}
+            ]
+        }
+        try:
+            resp = requests.post(url, headers=headers, json=payload, timeout=45)
+            if resp.status_code == 200:
+                content = resp.json()['choices'][0]['message']['content']
+                return strip_markdown(content), None
+        except Exception:
+            pass
+
     api_key = os.getenv('DEEPSEEK_API_KEY')
     if not api_key:
-        return None, "DEEPSEEK_API_KEY not set"
+        return None, "DEEPSEEK_API_KEY / OPENROUTER_API_KEY not set"
     url = "https://api.deepseek.com/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -163,6 +196,8 @@ def call_deepseek_coder(prompt):
 MODEL_DISPATCH = {
     'gpt-4o': call_openai_gpt4o,
     'claude-sonnet': call_anthropic_claude,
+    'gemini': call_google_gemini,
+    'gemini-flash': call_google_gemini,
     'gemini-2.5-pro': call_google_gemini,
     'deepseek-coder': call_deepseek_coder
 }
@@ -198,75 +233,99 @@ def run_synthetic_generation(limit=None, selected_models=None):
     if limit:
         prompts = prompts[:limit]
 
-    models_to_run = selected_models or MODELS
+    if selected_models:
+        models_to_run = selected_models
+    else:
+        # Auto-detect which models have keys configured in .env
+        models_to_run = []
+        if os.getenv('OPENAI_API_KEY'): models_to_run.append('gpt-4o')
+        if os.getenv('ANTHROPIC_API_KEY'): models_to_run.append('claude-sonnet')
+        if os.getenv('GEMINI_API_KEY') or os.getenv('GOOGLE_API_KEY'): models_to_run.append('gemini-2.5-pro')
+        if os.getenv('DEEPSEEK_API_KEY'): models_to_run.append('deepseek-coder')
+        
+        if not models_to_run:
+            print("Error: No API keys found in .env. Please configure at least one API key.")
+            sys.exit(1)
 
     conn = sqlite3.connect(DB_PATH)
     conn.execute('PRAGMA journal_mode=WAL')
     cursor = conn.cursor()
 
-    print(f"Starting synthetic generation: {len(prompts)} prompts across {len(models_to_run)} models.")
+    print(f"Starting synthetic generation: {len(prompts)} prompts across {len(models_to_run)} models (parallelized).")
     print(f"Target DB: {DB_PATH}")
     print("-" * 60)
 
     total_inserted = 0
     total_failed = 0
 
-    for idx, p in enumerate(prompts, 1):
-        prompt_id = p.get('ID', f'P_{idx}')
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    def process_prompt_model(p, model):
+        prompt_id = p.get('ID', 'P_X')
         cwe = p.get('CWE', 'UNKNOWN')
         prompt_text = p.get('Prompt', '')
+        file_name = f"synthetic_{model}_{cwe}_{prompt_id}.c"
 
-        print(f"[{idx}/{len(prompts)}] {prompt_id} ({cwe}): {p.get('Name', '')}")
+        handler = MODEL_DISPATCH.get(model)
+        if not handler:
+            return None, f"[{model}] Unknown model dispatcher"
 
-        for model in models_to_run:
-            handler = MODEL_DISPATCH.get(model)
-            if not handler:
-                print(f"  [{model}] Unknown model dispatcher")
-                continue
+        # Check existing
+        check_conn = sqlite3.connect(DB_PATH)
+        existing = check_conn.execute(
+            "SELECT id FROM raw_files WHERE repo_name='SYNTHETIC' AND file_path=?",
+            (file_name,)
+        ).fetchone()
+        check_conn.close()
 
-            # Check if this prompt & model combination already exists in DB
-            file_name = f"synthetic_{model}_{cwe}_{prompt_id}.c"
-            existing = cursor.execute(
-                "SELECT id FROM raw_files WHERE repo_name='SYNTHETIC' AND file_path=?",
-                (file_name,)
-            ).fetchone()
+        if existing:
+            return "SKIPPED", f"  [{model}] {prompt_id} ({cwe}): Already exists in DB"
 
-            if existing:
-                print(f"  [{model}] Already exists in DB, skipping.")
-                continue
+        code, err = handler(prompt_text)
+        if err or not code:
+            return "FAILED", f"  [{model}] {prompt_id} ({cwe}): Generation failed: {err}"
 
-            code, err = handler(prompt_text)
+        attributed_code = (
+            f"// Generated by {model} (temp=0) for Security Evaluation ({cwe} / {prompt_id})\n"
+            f"// Prompt Context: {p.get('Context', '')}\n\n"
+            f"{code}\n"
+        )
+        return "SUCCESS", (file_name, cwe, model, attributed_code, prompt_id)
 
-            if err or not code:
-                print(f"  [{model}] Generation failed: {err}")
+    tasks = []
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        for p in prompts:
+            for model in models_to_run:
+                tasks.append(executor.submit(process_prompt_model, p, model))
+
+        for future in as_completed(tasks):
+            status, res = future.result()
+            if status == "SUCCESS":
+                file_name, cwe, model, attributed_code, prompt_id = res
+                try:
+                    cursor.execute('''
+                        INSERT INTO raw_files (
+                            repo_name, file_path, language, search_keyword, ai_tool, file_content, keyword_in_comment
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ''', (
+                        "SYNTHETIC",
+                        file_name,
+                        "C",
+                        cwe,
+                        model,
+                        attributed_code,
+                        1
+                    ))
+                    conn.commit()
+                    total_inserted += 1
+                    print(f"  [{model}] {prompt_id} ({cwe}): Generated & stored ({len(attributed_code.encode('utf-8'))} bytes)")
+                except sqlite3.IntegrityError:
+                    pass
+            elif status == "FAILED":
                 total_failed += 1
-                continue
-
-            # Prepend explicit attribution comment for formal tracking
-            attributed_code = (
-                f"// Generated by {model} (temp=0) for Security Evaluation ({cwe} / {prompt_id})\n"
-                f"// Prompt Context: {p.get('Context', '')}\n\n"
-                f"{code}\n"
-            )
-
-            cursor.execute('''
-                INSERT INTO raw_files (
-                    repo_name, file_path, language, search_keyword, ai_tool, file_content, keyword_in_comment
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                "SYNTHETIC",
-                file_name,
-                "C",
-                cwe,
-                model,
-                attributed_code,
-                1  # Always verified comment-attributed
-            ))
-            conn.commit()
-            total_inserted += 1
-            print(f"  [{model}] Generated & stored ({len(attributed_code.encode('utf-8'))} bytes)")
-
-            time.sleep(1.0)  # Gentle API pacing
+                print(res)
+            elif status == "SKIPPED":
+                pass
 
     conn.close()
     print("-" * 60)

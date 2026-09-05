@@ -1,10 +1,13 @@
+import os
+import sqlite3
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import sqlite3
 
 def generate_heatmap():
-    conn = sqlite3.connect('../corpus.db')
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    db_path = os.path.join(base_dir, 'corpus.db')
+    conn = sqlite3.connect(db_path)
     
     # Join raw_files and static_results to get Model vs CWE
     query = """
@@ -16,22 +19,21 @@ def generate_heatmap():
     df = pd.read_sql_query(query, conn)
     
     if df.empty:
-        print("No categorized CWE data found. Injecting a mock row for testing...")
-        conn.execute("INSERT INTO static_results (program_id, cwe, tool) VALUES (1, 'CWE-121', 'MockTool')")
-        conn.commit()
-        df = pd.read_sql_query(query, conn)
+        print("No categorized CWE data found.")
+        conn.close()
+        return
         
     # Create a cross-tabulation matrix
     heatmap_data = pd.crosstab(df['model'], df['cwe'])
     
     # Plot using Seaborn
     plt.figure(figsize=(10, 6))
-    sns.heatmap(heatmap_data, annot=True, cmap="YlOrRd", cbar_kws={'label': 'Finding Count'})
+    sns.heatmap(heatmap_data, annot=True, cmap="YlOrRd", cbar_kws={'label': 'Finding Count'}, fmt='d')
     plt.title("Figure 2: CWE Frequency by Model")
     plt.tight_layout()
     
     # Save as 300dpi PNG
-    output_path = '../results/cwe_heatmap.png'
+    output_path = os.path.join(base_dir, 'results', 'cwe_heatmap.png')
     plt.savefig(output_path, dpi=300)
     print(f"Heatmap saved to {output_path}")
     
