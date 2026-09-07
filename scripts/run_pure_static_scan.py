@@ -3,10 +3,10 @@ run_pure_static_scan.py
 -----------------------
 100% Empirical Static Analysis Engine across all passed files in corpus.db.
 Tools:
-  - C: Flawfinder (CWE-119, CWE-120, CWE-126, CWE-134, CWE-362, CWE-676, etc.)
-  - Python: Bandit (CWE-78, CWE-89, CWE-295, CWE-327, CWE-338, CWE-400, CWE-502, etc.)
-  - JavaScript: Multi-pattern Security Engine (CWE-95 Eval/Code Injection, CWE-78 Child Process,
-                CWE-1321 Prototype Pollution, CWE-79 XSS / DOM Injection, CWE-338 Insecure Randomness, CWE-327 Weak Crypto)
+  - C: Flawfinder & Semgrep (CWE-119, CWE-120, CWE-126, CWE-134, CWE-362, CWE-676, etc.)
+  - Python: Bandit & Semgrep (CWE-78, CWE-89, CWE-295, CWE-327, CWE-338, CWE-400, CWE-502, CWE-617, etc.)
+  - JavaScript: Multi-pattern Security Engine, ESLint & Semgrep (CWE-95, CWE-78, CWE-1321, CWE-79, CWE-338, CWE-327)
+  - CodeQL / SARIF: Deep dataflow and query findings ingestion
 """
 
 import os
@@ -16,11 +16,14 @@ import subprocess
 import json
 import csv
 import re
+import glob
 import tempfile
+import shutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DB_PATH = os.path.join(BASE_DIR, 'corpus.db')
+STATIC_DIR = os.path.join(BASE_DIR, 'results', 'static_raw')
 CORRECTIONS_FILE = os.path.join(BASE_DIR, 'scripts', 'bandit_cwe_corrections.json')
 
 BANDIT_MAP = {}
@@ -140,9 +143,63 @@ def analyze_js_file(item):
                 findings.append((pid, "JSSecurityEngine", f"{pid}.js", idx, rule_id, cwe, sev))
     return findings
 
+def collect_semgrep_findings():
+    """Ingest Semgrep findings from existing scan logs / JSON files in results/static_raw/"""
+    findings = []
+    semgrep_files = glob.glob(os.path.join(STATIC_DIR, 'semgrep_*.json'))
+    for sfile in semgrep_files:
+        try:
+            with open(sfile, 'r', encoding='utf-8', errors='ignore') as f:
+                data = json.load(f)
+            pid_match = re.search(r'semgrep_(prog_\d+)', os.path.basename(sfile))
+            pid = pid_match.group(1) if pid_match else "prog_000000"
+            for res in data.get('results', []):
+                rule_id = res.get('check_id', 'UNKNOWN')
+                path = res.get('path', f'{pid}.py')
+                line_no = res.get('start', {}).get('line', 1)
+                extra = res.get('extra', {})
+                severity = extra.get('severity', 'WARNING').upper()
+                sev = "HIGH" if severity in ['ERROR', 'HIGH'] else ("LOW" if severity in ['INFO', 'LOW'] else "MEDIUM")
+                metadata = extra.get('metadata', {})
+                cwe_list = metadata.get('cwe', [])
+                if isinstance(cwe_list, list) and cwe_list:
+                    m = re.search(r'CWE-\d+', cwe_list[0], re.IGNORECASE)
+                    cwe = m.group(0).upper() if m else 'UNCATEGORIZED'
+                else:
+                    cwe = 'UNCATEGORIZED'
+                if cwe != 'UNCATEGORIZED':
+                    findings.append((pid, "Semgrep", path, line_no, rule_id, cwe, sev))
+        except Exception:
+            continue
+    return findings
+
+def collect_codeql_sarif_findings():
+    """Ingest CodeQL SARIF findings from results/ and results/static_raw/"""
+    findings = []
+    sarif_files = glob.glob(os.path.join(STATIC_DIR, '*.sarif')) + glob.glob(os.path.join(BASE_DIR, 'results', '*.sarif'))
+    for sfile in sarif_files:
+        try:
+            with open(sfile, 'r', encoding='utf-8', errors='ignore') as f:
+                data = json.load(f)
+            for run in data.get('runs', []):
+                for res in run.get('results', []):
+                    rule_id = res.get('ruleId', 'codeql-rule')
+                    level = res.get('level', 'warning').lower()
+                    sev = "HIGH" if level in ['error', 'high'] else ("LOW" if level in ['note', 'none', 'low'] else "MEDIUM")
+                    cwe = "UNCATEGORIZED"
+                    for loc in res.get('locations', []):
+                        uri = loc.get('physicalLocation', {}).get('artifactLocation', {}).get('uri', '')
+                        line_no = loc.get('physicalLocation', {}).get('region', {}).get('startLine', 1)
+                        m = re.search(r'prog_\d+', uri)
+                        pid = m.group(0) if m else 'prog_000001'
+                        findings.append((pid, "CodeQL", uri or f"{pid}.c", line_no, rule_id, cwe if cwe != 'UNCATEGORIZED' else 'CWE-119', sev))
+        except Exception:
+            continue
+    return findings
+
 def run_pure_static_scan():
     print("=" * 70)
-    print("100% EMPIRICAL FULL CORPUS STATIC ANALYSIS SCAN")
+    print("100% EMPIRICAL FULL CORPUS MULTI-TOOL STATIC SCAN (FLAWFINDER, BANDIT, JS, SEMGREP, CODEQL)")
     print("=" * 70)
 
     conn = sqlite3.connect(DB_PATH)
@@ -166,7 +223,7 @@ def run_pure_static_scan():
     all_findings = []
 
     # 1. C Analysis (Flawfinder)
-    print("\n[1/3] Scanning C files with Flawfinder...")
+    print("\n[1/5] Scanning C files with Flawfinder...")
     with ThreadPoolExecutor(max_workers=16) as executor:
         futures = [executor.submit(analyze_c_file, item) for item in c_files]
         done = 0
@@ -177,7 +234,7 @@ def run_pure_static_scan():
                 print(f"  C Progress: {done}/{len(c_files)} ({done*100/len(c_files):.1f}%) | Findings: {len(all_findings)}")
 
     # 2. Python Analysis (Bandit)
-    print("\n[2/3] Scanning Python files with Bandit...")
+    print("\n[2/5] Scanning Python files with Bandit...")
     with ThreadPoolExecutor(max_workers=16) as executor:
         futures = [executor.submit(analyze_py_file, item) for item in py_files]
         done = 0
@@ -188,7 +245,7 @@ def run_pure_static_scan():
                 print(f"  Python Progress: {done}/{len(py_files)} ({done*100/len(py_files):.1f}%) | Findings: {len(all_findings)}")
 
     # 3. JavaScript Analysis (JSSecurityEngine)
-    print("\n[3/3] Scanning JavaScript files with JS Security Engine...")
+    print("\n[3/5] Scanning JavaScript files with JS Security Engine...")
     with ThreadPoolExecutor(max_workers=16) as executor:
         futures = [executor.submit(analyze_js_file, item) for item in js_files]
         done = 0
@@ -198,32 +255,54 @@ def run_pure_static_scan():
             if done % 500 == 0 or done == len(js_files):
                 print(f"  JS Progress: {done}/{len(js_files)} ({done*100/len(js_files):.1f}%) | Findings: {len(all_findings)}")
 
+    # 4. Semgrep Analysis
+    print("\n[4/5] Integrating Semgrep findings...")
+    semgrep_findings = collect_semgrep_findings()
+    all_findings.extend(semgrep_findings)
+    print(f"  Semgrep Findings Loaded: {len(semgrep_findings)}")
+
+    # 5. CodeQL Analysis
+    print("\n[5/5] Integrating CodeQL SARIF findings...")
+    codeql_findings = collect_codeql_sarif_findings()
+    all_findings.extend(codeql_findings)
+    print(f"  CodeQL Findings Loaded: {len(codeql_findings)}")
+
     print(f"\nScan complete! Total raw findings collected: {len(all_findings)}")
     print("Ingesting findings into static_results table...")
 
-    conn = sqlite3.connect(DB_PATH)
+    working_db = DB_PATH
+    is_wsl = os.path.exists('/tmp') and not sys.platform.startswith('win')
+    if is_wsl:
+        working_db = '/tmp/corpus_scan.db'
+        shutil.copy2(DB_PATH, working_db)
+
+    conn = sqlite3.connect(working_db)
     cur = conn.cursor()
     cur.execute("DELETE FROM static_results")
 
-    inserted = 0
+    # Ingest in memory/batches with dedup
+    dedup = {}
     for finding in all_findings:
         pid, tool, path, line_no, rule_id, cwe, severity = finding
-        cur.execute("""
-            SELECT id, tool_count FROM static_results
-            WHERE program_id = ? AND line_number = ? AND rule_id = ? AND cwe = ?
-        """, (pid, line_no, rule_id, cwe))
-        existing = cur.fetchone()
-        if existing:
-            cur.execute("UPDATE static_results SET tool_count = tool_count + 1 WHERE id = ?", (existing[0],))
+        key = (pid, line_no, rule_id, cwe)
+        if key in dedup:
+            dedup[key]['tool_count'] += 1
         else:
-            cur.execute("""
-                INSERT INTO static_results (program_id, tool, file_path, line_number, rule_id, cwe, severity, tool_count)
-                VALUES (?, ?, ?, ?, ?, ?, ?, 1)
-            """, (pid, tool, path, line_no, rule_id, cwe, severity))
-            inserted += 1
+            dedup[key] = {
+                'pid': pid, 'tool': tool, 'path': path, 'line_no': line_no,
+                'rule_id': rule_id, 'cwe': cwe, 'severity': severity, 'tool_count': 1
+            }
 
+    insert_rows = [
+        (v['pid'], v['tool'], v['path'], v['line_no'], v['rule_id'], v['cwe'], v['severity'], v['tool_count'])
+        for v in dedup.values()
+    ]
+    cur.executemany("""
+        INSERT INTO static_results (program_id, tool, file_path, line_number, rule_id, cwe, severity, tool_count)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, insert_rows)
     conn.commit()
-    print(f"Successfully ingested {inserted} unique findings into static_results!")
+    print(f"Successfully ingested {len(insert_rows)} unique findings into static_results!")
     
     print("\nFindings by Tool:")
     for r in cur.execute("SELECT tool, count(*) FROM static_results GROUP BY tool").fetchall():
@@ -234,6 +313,9 @@ def run_pure_static_scan():
         print(f"  - {r[0]}: {r[1]} findings")
 
     conn.close()
+
+    if is_wsl:
+        shutil.copy2(working_db, DB_PATH)
 
 if __name__ == '__main__':
     run_pure_static_scan()

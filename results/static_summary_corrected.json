@@ -1,0 +1,140 @@
+{
+  "raw_total_findings": 56899,
+  "assert_noise_CWE617_excluded": 20141,
+  "assert_noise_pct_of_raw": 35.4,
+  "core_findings_excluding_asserts": 36758,
+  "core_findings_MEDIUM_HIGH_only": 33552,
+  "programs_with_a_core_finding": 3575,
+  "core_severity_breakdown": {
+    "HIGH": 537,
+    "LOW": 3206,
+    "MEDIUM": 33015
+  },
+  "core_tool_breakdown": {
+    "Bandit": 3418,
+    "CodeQL": 28793,
+    "Flawfinder": 944,
+    "JSSecurityEngine": 2909,
+    "Semgrep": 694
+  },
+  "top_10_cwes_excluding_asserts": {
+    "CWE-563": 15420,
+    "CWE-699": 8887,
+    "CWE-79": 2079,
+    "CWE-338": 1351,
+    "CWE-78": 958,
+    "CWE-117": 636,
+    "CWE-391": 600,
+    "CWE-390": 590,
+    "CWE-209": 498,
+    "CWE-396": 366
+  },
+  "per_model_density_excluding_asserts": [
+    {
+      "model": "deepseek",
+      "language": "Python",
+      "programs": 971,
+      "findings": 15718,
+      "findings_per_program": 16.19
+    },
+    {
+      "model": "gemini",
+      "language": "Python",
+      "programs": 957,
+      "findings": 4940,
+      "findings_per_program": 5.16
+    },
+    {
+      "model": "chatgpt",
+      "language": "JavaScript",
+      "programs": 723,
+      "findings": 4825,
+      "findings_per_program": 6.67
+    },
+    {
+      "model": "chatgpt",
+      "language": "Python",
+      "programs": 902,
+      "findings": 3395,
+      "findings_per_program": 3.76
+    },
+    {
+      "model": "gemini",
+      "language": "JavaScript",
+      "programs": 859,
+      "findings": 3216,
+      "findings_per_program": 3.74
+    },
+    {
+      "model": "gpt4",
+      "language": "Python",
+      "programs": 421,
+      "findings": 1583,
+      "findings_per_program": 3.76
+    },
+    {
+      "model": "copilot",
+      "language": "Python",
+      "programs": 727,
+      "findings": 1161,
+      "findings_per_program": 1.6
+    },
+    {
+      "model": "chatgpt",
+      "language": "C",
+      "programs": 219,
+      "findings": 871,
+      "findings_per_program": 3.98
+    },
+    {
+      "model": "gpt4",
+      "language": "JavaScript",
+      "programs": 204,
+      "findings": 399,
+      "findings_per_program": 1.96
+    },
+    {
+      "model": "deepseek",
+      "language": "JavaScript",
+      "programs": 52,
+      "findings": 276,
+      "findings_per_program": 5.31
+    },
+    {
+      "model": "copilot",
+      "language": "JavaScript",
+      "programs": 187,
+      "findings": 194,
+      "findings_per_program": 1.04
+    },
+    {
+      "model": "gemini",
+      "language": "C",
+      "programs": 55,
+      "findings": 79,
+      "findings_per_program": 1.44
+    },
+    {
+      "model": "copilot",
+      "language": "C",
+      "programs": 30,
+      "findings": 72,
+      "findings_per_program": 2.4
+    },
+    {
+      "model": "deepseek",
+      "language": "C",
+      "programs": 6,
+      "findings": 21,
+      "findings_per_program": 3.5
+    },
+    {
+      "model": "gpt4",
+      "language": "C",
+      "programs": 7,
+      "findings": 8,
+      "findings_per_program": 1.14
+    }
+  ],
+  "note": "CWE-617 (assert-used, Bandit B101) separated out as low-value noise. Core = all findings except asserts. Report core numbers as the headline; report asserts separately as a code-quality observation."
+}
