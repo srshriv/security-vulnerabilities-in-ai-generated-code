@@ -167,9 +167,9 @@ def run(xml_dir: str = XML_DIR):
     if total_ > 0:
         print(f"\nSAT rate: {sat_}/{total_} = {sat_/total_*100:.1f}%")
         if sat_ / total_ >= 0.70:
-            print("  [OK] SAT rate >= 70% -- unwind bound is acceptable.")
+            print("  ✓ SAT rate ≥ 70% — unwind bound is acceptable.")
         else:
-            print("  [INFO] SAT rate < 70% -- consider increasing --unwind to 15.")
+            print("  ✗ SAT rate < 70% — consider increasing --unwind to 15.")
 
     conn.close()
 

@@ -1,3 +1,0 @@
-Model,Total Programs,Static Flagged,Formal SAT,Dynamic Confirmed,Confirmed Vuln,Vuln Rate,Static FP,Static FP Rate
-copilot,1396,503,23,132,63,4.51%,440,87.48%
-chatgpt,840,352,0,166,59,7.02%,293,83.24%

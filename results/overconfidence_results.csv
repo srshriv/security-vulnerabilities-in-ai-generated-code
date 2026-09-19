@@ -1,3 +1,0 @@
-Model,Total_Evals,Empirically_Vulnerable,Overconfident_Errors,Overconfidence_Rate,Correct_Positive,False_Alarm,Correct_Negative,Mean_Confidence
-chatgpt,1792,725,637,87.86%,88,141,926,0.879
-copilot,3808,1230,1078,87.64%,152,292,2286,0.881

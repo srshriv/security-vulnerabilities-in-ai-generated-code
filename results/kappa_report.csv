@@ -1,5 +1,0 @@
-Evaluation_Stage,Description,Sample_Size_N,Observed_Agreement_Po,Cohens_Kappa,Interpretation
-Kappa_1_Corpus_Attribution,Data Collection & Filtering (Stage 1),300,0.597,0.0777,Low / Uncalibrated Raw Attribution
-Kappa_2_Static_SpotCheck,Multi-Tool Static Finding Validation,200,0.895,0.7842,Substantial Agreement
-Kappa_3_Dynamic_TaintReview,AST Dataflow Injection Review,200,0.995,0.8864,Near-Perfect Agreement
-Kappa_4_Crash_Categorization,ASan Signal / Fault Stack Categorization,150,0.985,0.9125,Near-Perfect Agreement
