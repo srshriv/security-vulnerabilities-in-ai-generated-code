@@ -36,7 +36,7 @@ def build_matrix():
     print("DAYS 13-14: BUILDING THREE-PILLAR MATRIX")
     print("=" * 70)
     
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=60.0)
     cur = conn.cursor()
     
     # Ensure pillar_matrix table exists
@@ -63,16 +63,27 @@ def build_matrix():
         f.program_id, f.model, f.language,
         CASE WHEN s.cnt > 0 THEN 1 ELSE 0 END as static_flagged,
         COALESCE(fr.sat_flag, 0) as cbmc_sat,
-        CASE WHEN d.afl_crashed = 1 OR d.final_injection_confirmed = 1 OR d.atheris_crashed = 1 THEN 1 ELSE 0 END as dynamic_flagged,
+        COALESCE(d.dynamic_flagged, 0) as dynamic_flagged,
         COALESCE(d.dynamic_cwe, 'NONE') as dynamic_cwe,
-        COALESCE(d.edge_coverage_pct, 50.0) as edge_coverage_pct
+        d.edge_coverage_pct as edge_coverage_pct
+
     FROM filtered_files f
     LEFT JOIN (SELECT program_id, count(*) as cnt FROM static_results GROUP BY program_id) s 
         ON f.program_id = s.program_id
-    LEFT JOIN (SELECT program_id, CASE WHEN cbmc_result = 'SAT' OR klee_direct_crash = 1 THEN 1 ELSE 0 END as sat_flag FROM formal_results) fr 
+    LEFT JOIN (SELECT program_id, MAX(CASE WHEN cbmc_result = 'SAT' OR klee_direct_crash = 1 THEN 1 ELSE 0 END) as sat_flag FROM formal_results GROUP BY program_id) fr 
         ON f.program_id = fr.program_id
-    LEFT JOIN dynamic_results d 
-        ON f.program_id = d.program_id
+    LEFT JOIN (
+        SELECT 
+            program_id,
+            MAX(CASE WHEN afl_crashed = 1 OR final_injection_confirmed = 1 OR atheris_crashed = 1 
+                          OR libfuzzer_differential = 1 OR msan_result = 'UNINITIALIZED_READ' 
+                          OR hang_confirmed = 1 OR classification = 'DYNAMIC_CONFIRMED' 
+                     THEN 1 ELSE 0 END) as dynamic_flagged,
+            MAX(dynamic_cwe) as dynamic_cwe,
+            MAX(edge_coverage_pct) as edge_coverage_pct
+        FROM dynamic_results
+        GROUP BY program_id
+    ) d ON f.program_id = d.program_id
     WHERE f.stage1 = 'PASSED'
     GROUP BY f.program_id
     ORDER BY f.id ASC

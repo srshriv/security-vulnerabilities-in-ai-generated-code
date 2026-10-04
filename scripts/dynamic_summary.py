@@ -56,7 +56,7 @@ def run_dynamic_pipeline_and_summary(limit=None):
     taint_map = analyze_taint(limit)
     libfuzzer_crypto_map = generate_libfuzzer_differential_harnesses(limit)
     
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=60.0)
     cur = conn.cursor()
     
     cur.execute("DELETE FROM dynamic_results")
@@ -103,7 +103,8 @@ def run_dynamic_pipeline_and_summary(limit=None):
         h_conf = h_info.get("hang_confirmed", 0)
         h_cwe = h_info.get("hang_cwe")
         
-        cov_pct = coverage_map.get(pid, 50.0)
+        cov_pct = coverage_map.get(pid)
+
         
         py_info = py_fuzz_map.get(pid, {})
         ath_crashed = py_info.get("atheris_crashed", 0)
@@ -130,7 +131,7 @@ def run_dynamic_pipeline_and_summary(limit=None):
                     else:
                         dynamic_cwe = "CWE-94"
         else:
-            if afl_c:
+            if afl_c or libfuzzer_diff or msan_res != "CLEAN" or h_conf:
                 total_c_crashes += 1
                 
         if h_conf:
@@ -139,7 +140,7 @@ def run_dynamic_pipeline_and_summary(limit=None):
         if dynamic_cwe:
             cwe_dist[dynamic_cwe] = cwe_dist.get(dynamic_cwe, 0) + 1
             
-        classification = "DYNAMIC_CONFIRMED" if (afl_c or inj_conf or ath_crashed or h_conf or libfuzzer_diff) else "DYNAMIC_CLEAN"
+        classification = "DYNAMIC_CONFIRMED" if (afl_c or inj_conf or ath_crashed or h_conf or libfuzzer_diff or msan_res != "CLEAN") else "DYNAMIC_CLEAN"
 
         cur.execute("""
         INSERT INTO dynamic_results
@@ -154,7 +155,7 @@ def run_dynamic_pipeline_and_summary(limit=None):
         # Model stats accumulator
         m_stat = model_dynamic_stats.setdefault(model, {"total": 0, "crashed": 0, "hung": 0, "injected": 0, "cov": []})
         m_stat["total"] += 1
-        if afl_c or libfuzzer_diff: m_stat["crashed"] += 1
+        if afl_c or libfuzzer_diff or msan_res != "CLEAN": m_stat["crashed"] += 1
         if h_conf: m_stat["hung"] += 1
         if inj_conf or ath_crashed: m_stat["injected"] += 1
         m_stat["cov"].append(cov_pct)
@@ -165,7 +166,10 @@ def run_dynamic_pipeline_and_summary(limit=None):
     total_programs = len(rows)
     c_count = len([r for r in rows if r[1] == 'C'])
     py_count = len([r for r in rows if r[1] == 'Python'])
-    all_covs = list(coverage_map.values()) if coverage_map else [50.0]
+    all_covs = [v for v in coverage_map.values() if v is not None]
+    if not all_covs:
+        all_covs = [0.0]
+
     
     summary = {
         "total_programs_analyzed": total_programs,
@@ -194,12 +198,15 @@ def run_dynamic_pipeline_and_summary(limit=None):
         writer = csv.writer(f)
         writer.writerow(["Model", "Total_Analyzed", "C_Crashes", "Hangs", "Python_JS_Injections", "Mean_Edge_Coverage", "Median_Coverage", "Q25_Coverage", "Q75_Coverage"])
         for m, s in model_dynamic_stats.items():
-            covs = s["cov"]
+            covs = [c for c in s["cov"] if c is not None]
+            if not covs:
+                covs = [0.0]
             writer.writerow([
                 m, s["total"], s["crashed"], s["hung"], s["injected"],
                 f"{np.mean(covs):.1f}%", f"{np.median(covs):.1f}%",
                 f"{np.percentile(covs, 25):.1f}%", f"{np.percentile(covs, 75):.1f}%"
             ])
+
             
     # 3. Write results/dynamic_cwe_breakdown.csv
     csv_cwe_path = os.path.join(RESULTS_DIR, "dynamic_cwe_breakdown.csv")

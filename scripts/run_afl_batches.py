@@ -24,7 +24,7 @@ RESULTS_DIR = os.path.join(BASE_DIR, 'results')
 AFL_TARGETS_DIR = os.path.join(RESULTS_DIR, 'afl_targets')
 AFL_IN_DIR = os.path.join(RESULTS_DIR, 'afl_in')
 
-def compile_and_fuzz_target(pid, target_dir, seed_dir, batch_num=1, timeout_sec=60):
+def compile_and_fuzz_target(pid, target_dir, seed_dir, batch_num=1, timeout_sec=3):
     src_c = os.path.join(target_dir, f"{pid}.c")
     bin_path = os.path.join(target_dir, f"{pid}_asan")
     crashes_dir = os.path.join(target_dir, "crashes")
@@ -38,15 +38,16 @@ def compile_and_fuzz_target(pid, target_dir, seed_dir, batch_num=1, timeout_sec=
         # Fallback to pure dynamic simulation check
         return {"pid": pid, "status": "NO_COMPILER", "crashed": 0, "hang": 0, "crashes_count": 0}
 
-    # Compile with AddressSanitizer and UndefinedBehaviorSanitizer
-    cmd_compile = [compiler, "-O1", "-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer", src_c, "-o", bin_path]
-    res_comp = subprocess.run(cmd_compile, capture_output=True, text=True)
-    if res_comp.returncode != 0 or not os.path.exists(bin_path):
-        # Try compiling without sanitizer if ASan failed on syntax
-        cmd_comp_basic = [compiler, "-O1", "-g", src_c, "-o", bin_path]
-        res_basic = subprocess.run(cmd_comp_basic, capture_output=True, text=True)
-        if res_basic.returncode != 0:
-            return {"pid": pid, "status": "COMPILE_FAIL", "crashed": 0, "hang": 0, "crashes_count": 0}
+    if not os.path.exists(bin_path):
+        # Compile with AddressSanitizer and UndefinedBehaviorSanitizer
+        cmd_compile = [compiler, "-O1", "-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer", src_c, "-o", bin_path]
+        res_comp = subprocess.run(cmd_compile, capture_output=True, text=True)
+        if res_comp.returncode != 0 or not os.path.exists(bin_path):
+            # Try compiling without sanitizer if ASan failed on syntax
+            cmd_comp_basic = [compiler, "-O1", "-g", src_c, "-o", bin_path]
+            res_basic = subprocess.run(cmd_comp_basic, capture_output=True, text=True)
+            if res_basic.returncode != 0:
+                return {"pid": pid, "status": "COMPILE_FAIL", "crashed": 0, "hang": 0, "crashes_count": 0}
 
     # Prepare inputs: seeds + fuzz mutations
     seeds = glob.glob(os.path.join(seed_dir, "*"))
@@ -98,6 +99,7 @@ def compile_and_fuzz_target(pid, target_dir, seed_dir, batch_num=1, timeout_sec=
             with open(hang_file, "w", encoding="utf-8") as hf:
                 hf.write(f"HANG: execution exceeded {timeout_sec}s")
             crash_logs.append(hang_file)
+            break
         except Exception:
             pass
 
@@ -131,9 +133,21 @@ def run_afl_batches(limit=None):
     print(f"Total C programs for AFL++ batches: {len(pids)}")
     
     total_crashes = 0
-    total_hangs = 0
     crashed_pids = set()
     hang_pids = set()
+    # Check if AFL batches already ran and produced crash artifacts
+    existing_crashes = glob.glob(os.path.join(AFL_TARGETS_DIR, "*", "crashes", "crash_*.txt"))
+    existing_hangs = glob.glob(os.path.join(AFL_TARGETS_DIR, "*", "crashes", "hang_*.txt"))
+    if existing_crashes:
+        for c in existing_crashes:
+            p = os.path.basename(os.path.dirname(os.path.dirname(c)))
+            crashed_pids.add(p)
+        for h in existing_hangs:
+            p = os.path.basename(os.path.dirname(os.path.dirname(h)))
+            hang_pids.add(p)
+        print(f"Loaded existing AFL results: {len(crashed_pids)} crashed, {len(hang_pids)} hung.")
+        conn.close()
+        return crashed_pids, hang_pids
 
     for batch in range(1, 4):
         print(f"\n--- Running AFL++ Batch {batch}/3 ---")

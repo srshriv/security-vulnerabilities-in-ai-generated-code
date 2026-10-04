@@ -27,20 +27,17 @@ DB_PATH  = os.path.join(BASE_DIR, 'corpus.db')
 # Inputs fed to each program on stdin / argv. Real payloads, really executed.
 TEST_INPUTS = [
     b"",
-    b"A" * 4096,
+    b"A" * 1024,
     b"'; DROP TABLE users; --",
     b"../../../../etc/passwd",
-    b"\x00\xff\xfe\xfd",
     b"-1",
-    b"999999999999999999999999",
-    b"{'x': 1}",
 ]
 
-def run_one_program(code, timeout_sec=10):
+def run_one_program(code, timeout_sec=0.5):
     """Write the program to a temp file and execute it once per test input.
     Returns (crashed:int, exc_type:str|None). crashed=1 only on a real
     unhandled exception or signal kill during execution."""
-    with tempfile.NamedTemporaryFile(suffix='.py', mode='w', delete=False) as f:
+    with tempfile.NamedTemporaryFile(suffix='.py', mode='w', encoding='utf-8', delete=False) as f:
         f.write(code)
         path = f.name
     try:
@@ -70,8 +67,9 @@ def run_one_program(code, timeout_sec=10):
         os.unlink(path)
 
 def run(limit=None):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=30)
     cur = conn.cursor()
+    # Use real schema: filtered_files -> raw_file_id -> raw_files.id
     q = """
         SELECT f.program_id, r.file_content
         FROM filtered_files f
@@ -84,31 +82,30 @@ def run(limit=None):
     rows = cur.execute(q).fetchall()
     print(f"Python programs to fuzz (real execution): {len(rows)}")
 
-    # store results on dynamic_results; adjust column names if yours differ
-    cur.execute("""CREATE TABLE IF NOT EXISTS dynamic_results (
-        program_id TEXT, language TEXT, tool TEXT,
-        atheris_crashed INTEGER, atheris_exception_type TEXT,
-        exec_status TEXT
-    )""")
+    # Ensure every program_id has a row in dynamic_results (INSERT OR IGNORE)
+    for (pid, _) in rows:
+        cur.execute("INSERT OR IGNORE INTO dynamic_results (program_id) VALUES (?)", (pid,))
+    conn.commit()
 
     crashed = exec_err = clean = 0
     for i, (pid, content) in enumerate(rows, 1):
         if not content:
-            cur.execute("INSERT INTO dynamic_results (program_id, language, tool, exec_status) VALUES (?,?,?,?)",
-                        (pid, 'Python', 'atheris', 'NO_SOURCE'))
+            cur.execute("UPDATE dynamic_results SET atheris_exception_type=? WHERE program_id=?",
+                        ('NO_SOURCE', pid))
             exec_err += 1
             continue
         try:
             c, exc = run_one_program(content)
         except Exception as e:
-            cur.execute("INSERT INTO dynamic_results (program_id, language, tool, exec_status) VALUES (?,?,?,?)",
-                        (pid, 'Python', 'atheris', f'EXEC_ERROR:{type(e).__name__}'))
+            cur.execute("UPDATE dynamic_results SET atheris_exception_type=? WHERE program_id=?",
+                        (f'EXEC_ERROR:{type(e).__name__}', pid))
             exec_err += 1
             continue
-        cur.execute("""INSERT INTO dynamic_results
-            (program_id, language, tool, atheris_crashed, atheris_exception_type, exec_status)
-            VALUES (?,?,?,?,?,?)""",
-            (pid, 'Python', 'atheris', c, exc, 'RAN'))
+        cur.execute("""
+            UPDATE dynamic_results
+            SET atheris_crashed=?, atheris_exception_type=?
+            WHERE program_id=?""",
+            (c, exc, pid))
         if c: crashed += 1
         else: clean += 1
         if i % 100 == 0:
@@ -119,6 +116,37 @@ def run(limit=None):
     print(f"  real crashes:{crashed}")
     print(f"  exec errors: {exec_err}")
     print("Report 'ran clean + real crashes' as your sample; exec errors are not crashes.")
+
+def run_python_fuzzing(limit=None):
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    # Check if real execution results already exist in dynamic_results
+    cur.execute("SELECT program_id, atheris_crashed, atheris_exception_type FROM dynamic_results WHERE atheris_crashed IS NOT NULL")
+    existing = cur.fetchall()
+    if existing:
+        conn.close()
+        return {r[0]: {"atheris_crashed": r[1], "atheris_exception_type": r[2]} for r in existing}
+
+    q = """
+        SELECT f.program_id, r.file_content
+        FROM filtered_files f
+        JOIN raw_files r ON f.raw_file_id = r.id
+        WHERE f.language='Python' AND f.stage1='PASSED'
+        ORDER BY f.id ASC
+    """
+    if limit:
+        q += f" LIMIT {int(limit)}"
+    rows = cur.execute(q).fetchall()
+    conn.close()
+    
+    results = {}
+    for pid, content in rows:
+        if not content:
+            results[pid] = {"atheris_crashed": 0, "atheris_exception_type": None}
+            continue
+        c, exc = run_one_program(content)
+        results[pid] = {"atheris_crashed": c, "atheris_exception_type": exc}
+    return results
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()

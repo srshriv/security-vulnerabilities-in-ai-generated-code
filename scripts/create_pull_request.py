@@ -47,14 +47,13 @@ def create_pr():
     # Stage all updated scripts, results, and assets
     run_git(['add', '.gitignore'])
     run_git(['add', 'scripts/'])
-    run_git(['add', 'results/*.csv'])
-    run_git(['add', 'results/*.json'])
-    run_git(['add', 'results/*.png'])
-    run_git(['add', 'results/*.pdf'])
-    run_git(['add', 'results/taint_disagreement_log.md'])
+    run_git(['add', 'results/'])
+    run_git(['add', 'FINAL_RESULT.TXT'])
 
     # Explicitly ensure no db or env files are staged
     run_git(['rm', '--cached', '-f', 'corpus.db'])
+    run_git(['rm', '--cached', '-f', 'corpus.db.corrupted_bak'])
+    run_git(['rm', '--cached', '-f', 'corpus.db.recovered'])
     run_git(['rm', '--cached', '-f', 'corpus (2).zip'])
     run_git(['rm', '--cached', '-f', 'corpus.zip'])
     run_git(['rm', '--cached', '-f', '.env'])
@@ -66,9 +65,9 @@ def create_pr():
     commit_msg = """feat: Complete Days 11-14 Dynamic Analysis, Overconfidence Proxy & Three-Pillar Matrix Integration
 
 - Implemented AFL++ batches 1-3, MSan/differential analysis, crash deduplication, edge coverage (mean 67.55%), and hang detection (CWE-834).
-- Executed 5,600 overconfidence proxy evaluations across models (86.24% overconfidence error rate).
+- Executed 5,600 overconfidence proxy evaluations across models (87.72% overconfidence error rate).
 - Conducted AST & dataflow taint tracking for Python/JS with two-rater consensus (Cohen's Kappa = 0.8864).
-- Reconstructed 3-Pillar Matrix (Static, Formal, Dynamic) across 2,236 programs: 122 confirmed vulnerable, 85.73% static FP rate, 180 dynamic-only discoveries.
+- Reconstructed 3-Pillar Matrix (Static, Formal, Dynamic) across 2,236 programs: 157 confirmed vulnerable (7.02%), 83.86% static FP rate, 273 dynamic-only discoveries.
 - Generated publication figures: Coverage violin plot, Pillar overlap distribution (Fig 1), and CWE frequency heatmap (Fig 2)."""
 
     run_git(['commit', '-m', commit_msg])
@@ -89,35 +88,36 @@ def create_pr():
     pr_title = "feat: Complete Days 11–14 Dynamic Analysis, Overconfidence Proxy & Three-Pillar Integration"
     pr_body = """## Summary of Changes
 
-This Pull Request delivers the complete, 100% uncalibrated, empirical **Days 11 through 14** research pipeline for dynamic vulnerability analysis and multi-pillar integration in AI-generated code.
+This Pull Request delivers the complete dynamic vulnerability analysis, formal verification integration, overconfidence proxy, and multi-pillar integration research pipeline for **Days 11 through 14**.
 
 ### 1. Dynamic Fuzzing & Differential Execution (Day 11)
 - **AFL++ Batches 1–3:** Multi-batch fuzzing with concrete seeds, boundary mutations, and crash logging.
-- **MemorySanitizer (MSan) & libFuzzer:** Differential checks for uninitialized memory reads (`CWE-457`) and memory corruption.
+- **MemorySanitizer (MSan) & Differential Analysis:** Cryptographic routine divergences (`CWE-327`) and memory access checks.
 - **Crash Deduplication (`scripts/deduplicate_crashes.py`):** SHA-256 crash hashing based on faulting frames/signals.
-- **Edge Coverage (`scripts/edge_coverage.py`):** Branch/edge coverage calculated across all programs (**Mean: 67.55%**).
+- **Edge Coverage (`scripts/edge_coverage.py`):** Measured branch/edge coverage across all programs (**Mean: 67.55%**, Median: 76.0%).
 - **Hang Detection (`scripts/hang_detection.py`):** Infinite loop / DoS classification (`CWE-834` / `CWE-400`).
 
 ### 2. Overconfidence Proxy & Python Taint Tracking (Day 12)
-- **Overconfidence Proxy (5,600 evaluations):** Analyzed AI model self-confidence vs empirical vulnerability findings.
-  - **Overall Overconfidence Error Rate:** **86.24%** (Copilot: 86.91%, ChatGPT: 85.10%).
+- **Overconfidence Proxy:** Evaluated model self-confidence vs empirical multi-pillar vulnerability findings across 5,600 evaluations (**87.72% overconfidence error rate** on vulnerable code).
 - **Atheris Python Fuzzing & AST Taint Tracker (`scripts/taint_tracker.py`):** Source-to-sink dataflow tracking into dangerous execution sinks (`eval`, `exec`, `system`, `execute`).
-- **Two-Rater Taint Review Consensus:** **$\kappa = 0.8864$** ($P_o = 99.5\%$) on $n=200$ sample.
+- **Two-Rater Taint Review Consensus:** **$\\kappa = 0.8864$** ($P_o = 99.5\\%$) on $n=200$ sample.
 
 ### 3. Three-Pillar Matrix & Headline Metrics (Days 13–14)
 - **8-Cell Three-Pillar Matrix (`pillar_matrix` table):**
   - **Total Programs Analyzed:** `2,236`
-  - **Confirmed Vulnerabilities (Multi-Pillar / Crash):** `122` (5.46%)
-  - **Novel Static False Positive Rate:** `85.73%` (733 / 855 static findings unconfirmed)
-  - **Dynamic-Only Discoveries:** `180` (bugs missed completely by static signatures)
+  - **Confirmed Vulnerabilities (Multi-Pillar / Dynamic Discovery):** `157` (7.02%)
+  - **Novel Static False Positive Rate:** `83.86%` (717 out of 855 static findings failed to be verified by formal models or dynamic execution)
+  - **Dynamic-Only Discoveries:** `273` (vulnerabilities identified dynamically without static tool signature)
+  - **All Three Pillars Agreement:** `2` programs
 - **Per-Model Comparison:**
-  - **Copilot:** 1,396 programs, 4.51% confirmed vulnerability rate, 87.48% static FP rate
-  - **ChatGPT:** 840 programs, 7.02% confirmed vulnerability rate, 83.24% static FP rate
+  - **Copilot:** 1,396 programs, 6.23% confirmed vulnerability rate
+  - **ChatGPT:** 840 programs, 8.33% confirmed vulnerability rate
 
 ### 4. Visualizations & Publication Artifacts
 - **Figure 1:** [results/pillar_agreement_upset.png](file:///results/pillar_agreement_upset.png) (Three-Pillar Overlap Distribution)
 - **Figure 2:** [results/cwe_heatmap.png](file:///results/cwe_heatmap.png) (Top CWE Frequency by Model Heatmap)
 - **Figure 3:** [results/coverage_violin.png](file:///results/coverage_violin.png) (Dynamic Execution Edge Coverage Distribution)
+- **Comprehensive Document:** `FINAL_RESULT.TXT` containing full matrix breakdown and statistical summaries.
 - **Summaries:** `headline_metrics.json`, `per_model_summary.json`, `per_model_table.csv`, `dynamic_summary.json`, `overconfidence_summary.json`.
 """
 

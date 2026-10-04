@@ -1,28 +1,25 @@
 {
-    "total_static_findings": 56899,
+    "total_static_findings": 30143,
     "tool_breakdown": {
-        "Bandit": 23559,
         "CodeQL": 28793,
-        "Flawfinder": 944,
-        "JSSecurityEngine": 2909,
+        "JSSecurityEngine": 656,
         "Semgrep": 694
     },
     "fp_risk_breakdown": {
-        "HIGH": 205,
-        "LOW": 545,
-        "MEDIUM": 56149
+        "LOW": 248,
+        "MEDIUM": 29895
     },
     "top_10_cwes": {
-        "CWE-617": 20141,
         "CWE-563": 15420,
         "CWE-699": 8887,
-        "CWE-79": 2079,
-        "CWE-338": 1351,
-        "CWE-78": 958,
         "CWE-117": 636,
-        "CWE-391": 600,
         "CWE-390": 590,
-        "CWE-209": 498
+        "CWE-79": 538,
+        "CWE-209": 498,
+        "CWE-396": 366,
+        "CWE-022": 331,
+        "CWE-561": 300,
+        "CWE-770": 286
     },
-    "unique_programs_flagged": 3672
+    "unique_programs_flagged": 3168
 }

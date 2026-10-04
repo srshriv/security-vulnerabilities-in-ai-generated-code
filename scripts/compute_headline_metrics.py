@@ -84,11 +84,11 @@ def compute_headline_metrics():
     mean_cov = round(cur.fetchone()[0] or 67.55, 2)
     
     py_total = cur.execute("SELECT COUNT(*) FROM filtered_files WHERE language = 'Python' AND stage1 = 'PASSED'").fetchone()[0]
-    py_inj = cur.execute("SELECT COUNT(*) FROM dynamic_results WHERE final_injection_confirmed = 1 OR atheris_crashed = 1").fetchone()[0]
+    py_inj = cur.execute("SELECT COUNT(DISTINCT program_id) FROM dynamic_results WHERE final_injection_confirmed = 1 OR atheris_crashed = 1").fetchone()[0]
     py_inj_rate = round((py_inj / max(py_total, 1)) * 100, 2)
     
-    # Overconfidence stats
-    overconf_total = cur.execute("SELECT COUNT(*) FROM overconfidence_proxy WHERE empirical_vulnerable = 1").fetchone()[0]
+    # Overconfidence stats (only over real valid model responses)
+    overconf_total = cur.execute("SELECT COUNT(*) FROM overconfidence_proxy WHERE empirical_vulnerable = 1 AND claim_verdict IS NOT NULL").fetchone()[0]
     overconf_err = cur.execute("SELECT COUNT(*) FROM overconfidence_proxy WHERE is_overconfident = 1").fetchone()[0]
     overconf_rate = round((overconf_err / max(overconf_total, 1)) * 100, 2)
     
@@ -127,17 +127,29 @@ def compute_headline_metrics():
     cur.execute("""
     SELECT language, 
            COUNT(*) as total,
-           SUM(CASE WHEN classification = 'CONFIRMED_VULNERABLE' THEN 1 ELSE 0 END) as conf_cnt
+           SUM(CASE WHEN classification = 'CONFIRMED_VULNERABLE' THEN 1 ELSE 0 END) as conf_cnt,
+           SUM(CASE WHEN cell_label != 'NONE' THEN 1 ELSE 0 END) as any_pillar_flagged,
+           SUM(static_flagged) as static_cnt,
+           SUM(cbmc_sat) as formal_cnt,
+           SUM(afl_crashed) as dynamic_cnt,
+           SUM(CASE WHEN cell_label = 'STATIC_ONLY' THEN 1 ELSE 0 END) as static_fp_cnt
     FROM pillar_matrix
     GROUP BY language
     ORDER BY total DESC
     """)
     lang_stats = {}
-    for l, l_tot, l_conf in cur.fetchall():
+    for l, l_tot, l_conf, l_any, l_stat, l_form, l_dyn, l_fp in cur.fetchall():
         lang_stats[l] = {
             "total_programs": l_tot,
-            "confirmed_vulnerable": l_conf,
-            "vulnerability_rate_pct": round((l_conf / max(l_tot, 1)) * 100, 2)
+            "raw_any_pillar_flagged": l_any,
+            "raw_any_pillar_rate_pct": round((l_any / max(l_tot, 1)) * 100, 2),
+            "multi_pillar_confirmed_vulnerable": l_conf,
+            "multi_pillar_confirmed_vulnerability_rate_pct": round((l_conf / max(l_tot, 1)) * 100, 2),
+            "static_flagged": l_stat,
+            "formal_sat": l_form,
+            "dynamic_confirmed": l_dyn,
+            "static_fp_count": l_fp,
+            "static_fp_rate_pct": round((l_fp / max(l_stat, 1)) * 100, 2)
         }
         
     headline_metrics = {

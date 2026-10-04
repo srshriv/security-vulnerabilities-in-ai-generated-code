@@ -24,3 +24,8 @@ scripts/_*.py
 results/static_raw/
 results/cbmc_out/
 results/klee_out/
+results/atheris_targets/
+results/libfuzzer_targets/
+results/afl_targets/
+results/afl_out/
+*.txt
